@@ -44,7 +44,7 @@ public class RegalTransaction {
         realm.commitTransaction();
     }
 
-    public static void saveInBackground(Realm realm, OnRegalUpdatedListener listener, RealmObject... objects) {
+    public static void saveInBackground(@NonNull Realm realm, OnRegalUpdatedListener listener, RealmObject... objects) {
         new SaveTask(realm, listener).execute(objects);
     }
 
