@@ -83,6 +83,7 @@ public class RealmTest extends AndroidTestCase {
                         Dog dog1 = new Dog();
                         dog1.setName("Kitty1");
                         realm1.commitTransaction();
+                        realm1.close();
                     }
                 };
 

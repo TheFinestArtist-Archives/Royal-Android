@@ -45,6 +45,10 @@ public class RegalTransaction {
     }
 
     public static void saveInBackground(@NonNull Realm realm, OnRegalUpdatedListener listener, RealmObject... objects) {
+        if (Thread.currentThread().getId() != 1)
+            throw new IllegalStateException("Please call RegalTransaction.saveInBackground() method in main thread!! " +
+                    "If you are not in main thread, please use RegalTransaction.save() method :)");
+
         new SaveTask(realm, listener).execute(objects);
     }
 

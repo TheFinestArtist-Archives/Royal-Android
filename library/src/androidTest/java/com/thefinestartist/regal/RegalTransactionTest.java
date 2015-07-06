@@ -209,22 +209,28 @@ public class RegalTransactionTest extends AndroidTestCase {
                 dog1.setName("Kitty1");
 
                 // 3. RegalTransaction.saveInBackground()
-                RegalTransaction.saveInBackground(realm1, new OnRegalUpdatedListener() {
-                    @Override
-                    public void onUpdated() {
-                        // 4. Query
-                        Realm realm = Realm.getInstance(realmConfig1);
-                        RealmQuery<Dog> query = realm.where(Dog.class);
-                        RealmResults<Dog> dogs = query.findAll();
+                try {
+                    RegalTransaction.saveInBackground(realm1, new OnRegalUpdatedListener() {
+                        @Override
+                        public void onUpdated() {
+                            // 4. Query
+                            Realm realm = Realm.getInstance(realmConfig1);
+                            RealmQuery<Dog> query = realm.where(Dog.class);
+                            RealmResults<Dog> dogs = query.findAll();
 
-                        // 5. Assert
-                        assertNotNull(dogs);
-                        assertEquals(1, dogs.size());
-                        assertEquals("Kitty1", dogs.get(0).getName());
-                        assertEquals(1, Thread.currentThread().getId());
-                        latch.countDown();
-                    }
-                }, dog1);
+                            // 5. Assert
+                            assertNotNull(dogs);
+                            assertEquals(1, dogs.size());
+                            assertEquals("Kitty1", dogs.get(0).getName());
+                            assertEquals(1, Thread.currentThread().getId());
+                            latch.countDown();
+                        }
+                    }, dog1);
+                    fail("Please call RegalTransaction.saveInBackground() method in main thread!! " +
+                            "If you are not in main thread, please use RegalTransaction.save() method :)");
+                } catch (IllegalStateException e) {
+                    latch.countDown();
+                }
 
                 // 6. Realm Close
                 realm1.close();
