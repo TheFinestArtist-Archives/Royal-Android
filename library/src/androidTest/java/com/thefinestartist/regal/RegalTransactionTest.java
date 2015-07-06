@@ -1,5 +1,6 @@
 package com.thefinestartist.regal;
 
+import android.os.Handler;
 import android.test.AndroidTestCase;
 
 import com.thefinestartist.regal.entities.Dog;
@@ -240,5 +241,41 @@ public class RegalTransactionTest extends AndroidTestCase {
     }
 
     public void testSaveInBackground2() throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        new Handler(getContext().getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                // 1. Realm Setup
+                final RealmConfiguration realmConfig1 = new RealmConfiguration.Builder(getContext()).name("1testSaveInBackground2.realm").build();
+                Realm.deleteRealm(realmConfig1);
+                Realm realm1 = Realm.getInstance(realmConfig1);
+
+                // 2. Object Setup
+                Dog dog1 = new Dog();
+                dog1.setName("Kitty1");
+
+                // 3. RegalTransaction.saveInBackground()
+                RegalTransaction.saveInBackground(realm1, new OnRegalUpdatedListener() {
+                    @Override
+                    public void onUpdated() {
+                        // 4. Query
+                        Realm realm = Realm.getInstance(realmConfig1);
+                        RealmQuery<Dog> query = realm.where(Dog.class);
+                        RealmResults<Dog> dogs = query.findAll();
+
+                        // 5. Assert
+                        assertNotNull(dogs);
+                        assertEquals(1, dogs.size());
+                        assertEquals("Kitty1", dogs.get(0).getName());
+                        assertEquals(1, Thread.currentThread().getId());
+                        latch.countDown();
+                    }
+                }, dog1);
+
+                // 6. Realm Close
+                realm1.close();
+            }
+        });
+        latch.await();
     }
 }
