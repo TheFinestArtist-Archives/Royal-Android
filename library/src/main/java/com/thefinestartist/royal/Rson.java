@@ -47,7 +47,7 @@ public class Rson {
 
 
     public static String toJsonString(@NonNull RealmObject object) {
-        return toJsonString(object, 0);
+        return toJsonString(object, 1);
     }
 
     static String toJsonString(@NonNull RealmObject object, int depth) {
@@ -106,10 +106,10 @@ public class Rson {
                     case MIXED:
                         break;
                     case LINK:
-                        if (depth == 0) {
+                        if (depth > 0) {
                             builder.append(prefix);
                             RealmObject linkedObject = RoyalAccess.get(realm, table.getLinkTarget(i), row.getLink(i));
-                            builder.append("\"").append(table.getColumnName(i)).append("\":").append(Rson.toJsonString(linkedObject, depth + 1));
+                            builder.append("\"").append(table.getColumnName(i)).append("\":").append(Rson.toJsonString(linkedObject, depth - 1));
                             prefix = ",";
                         }
                         break;
