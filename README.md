@@ -2,6 +2,7 @@
 **This project created to help developer to have better experience in using [Realm-Java](https://github.com/realm/realm-java)**
 
 Realm is very fast database, but unfortunately there is some usability issues.
+
 1. Realm, RealmObject can not be accessed by different thread other then which is was first created.
 2. You have to open and close every time you use Realm.
 3. You have to call realm.beginTransaction() and realm.commitTransaction() every time you want to save data.
