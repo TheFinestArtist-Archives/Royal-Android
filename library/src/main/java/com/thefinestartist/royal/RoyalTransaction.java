@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.thefinestartist.royal.listener.OnRoyalUpdatedListener;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
@@ -49,19 +52,56 @@ public class RoyalTransaction {
             throw new IllegalStateException("Please call RoyalTransaction.saveInBackground() method in main thread!! " +
                     "If you are not in main thread, please use RoyalTransaction.save() method :)");
 
-        new SaveTask(realm, listener).execute(objects);
+        for (RealmObject object : objects) {
+            RoyalAccess.clearObject(object);
+//            Realm objectRealm = RoyalAccess.getRealm(object);
+//            if (objectRealm != null) {
+//                objectRealm.beginTransaction();
+//                object.removeFromRealm();
+//                objectRealm.commitTransaction();
+//            }
+        }
+
+//        Set<Realm> realms = getRealms(objects);
+//        new SaveTask(realm.getConfiguration(), realms, listener).execute(objects);
+
+        new SaveTask(realm.getConfiguration(), null, listener).execute(objects);
+    }
+
+    private static Set<Realm> getRealms(RealmObject[] objects) {
+        Set<Realm> realms = new HashSet<>();
+        for (RealmObject object : objects)
+            realms.add(RoyalAccess.getRealm(object));
+        realms.remove(null);
+        return realms;
+    }
+
+    private static void incrementReferenceCount(Set<Realm> realms) {
+        for (Realm realm : realms) {
+            Realm newRealm = Realm.getInstance(realm.getConfiguration());
+        }
+    }
+
+    private static void decrementReferenceCount(Set<Realm> realms) {
+        for (Realm realm : realms)
+            realm.close();
     }
 
     static class SaveTask extends AsyncTask<RealmObject, Void, Void> {
 
         RealmConfiguration configuration;
-        Realm realm;
+        Set<Realm> realms;
         OnRoyalUpdatedListener listener;
 
-        private SaveTask(Realm realm, OnRoyalUpdatedListener listener) {
-            this.configuration = realm.getConfiguration();
-            this.realm = Realm.getInstance(configuration);
+        private SaveTask(RealmConfiguration configuration, Set<Realm> realms, OnRoyalUpdatedListener listener) {
+            this.configuration = configuration;
+            this.realms = realms;
             this.listener = listener;
+        }
+
+        @Override
+        protected void onPreExecute() {
+//            incrementReferenceCount(realms);
         }
 
         @Override
@@ -76,8 +116,9 @@ public class RoyalTransaction {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            realm.close();
-            listener.onUpdated();
+//            decrementReferenceCount(realms);
+            if (listener != null)
+                listener.onUpdated();
         }
     }
 

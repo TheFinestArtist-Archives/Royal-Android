@@ -12,7 +12,7 @@ public class Royal {
 
     static Context context;
 
-    public static void initialize(@NonNull Context context) {
+    public static void joinWith(@NonNull Context context) {
         Royal.context = context.getApplicationContext();
         Logger.init("Royal");
     }
