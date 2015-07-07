@@ -1,11 +1,11 @@
-package com.thefinestartist.regal;
+package com.thefinestartist.royal;
 
 import android.os.Handler;
 import android.test.AndroidTestCase;
 
-import com.thefinestartist.regal.entities.Dog;
-import com.thefinestartist.regal.entities.DogPrimaryKey;
-import com.thefinestartist.regal.listener.OnRegalUpdatedListener;
+import com.thefinestartist.royal.entities.Dog;
+import com.thefinestartist.royal.entities.DogPrimaryKey;
+import com.thefinestartist.royal.listener.OnRoyalUpdatedListener;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -18,11 +18,11 @@ import io.realm.RealmResults;
  * Created by TheFinestArtist on 7/5/15.
  */
 
-public class RegalTransactionTest extends AndroidTestCase {
+public class RoyalTransactionTest extends AndroidTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        Regal.initialize(getContext());
+        Royal.initialize(getContext());
     }
 
     @Override
@@ -39,8 +39,8 @@ public class RegalTransactionTest extends AndroidTestCase {
         Dog dog1 = new Dog();
         dog1.setName("Kitty1");
 
-        // 3. RegalTransaction.save()
-        RegalTransaction.save(realm1, dog1);
+        // 3. RoyalTransaction.save()
+        RoyalTransaction.save(realm1, dog1);
 
         // 4. Query
         RealmQuery<Dog> query = realm1.where(Dog.class);
@@ -70,8 +70,8 @@ public class RegalTransactionTest extends AndroidTestCase {
         dog2.setName("Kitty2");
         realm1.commitTransaction();
 
-        // 3. RegalTransaction.save()
-        RegalTransaction.save(realm1, dog1, dog2);
+        // 3. RoyalTransaction.save()
+        RoyalTransaction.save(realm1, dog1, dog2);
 
         // 4. Query
         RealmQuery<Dog> query = realm1.where(Dog.class);
@@ -106,8 +106,8 @@ public class RegalTransactionTest extends AndroidTestCase {
         dog2.setName("Kitty2");
         realm2.commitTransaction();
 
-        // 3. RegalTransaction.save()
-        RegalTransaction.save(realm1, dog1, dog2);
+        // 3. RoyalTransaction.save()
+        RoyalTransaction.save(realm1, dog1, dog2);
 
         // 4. Query
         RealmQuery<Dog> query = realm1.where(Dog.class);
@@ -152,8 +152,8 @@ public class RegalTransactionTest extends AndroidTestCase {
         dog4.setId(3);
         dog4.setName("Kitty4");
 
-        // 3. RegalTransaction.save()
-        RegalTransaction.save(realm1, dog1, dog2, dog3, dog4);
+        // 3. RoyalTransaction.save()
+        RoyalTransaction.save(realm1, dog1, dog2, dog3, dog4);
 
         // 4. Query
         RealmQuery<DogPrimaryKey> query = realm1.where(DogPrimaryKey.class);
@@ -180,8 +180,8 @@ public class RegalTransactionTest extends AndroidTestCase {
         Dog dog1 = new Dog();
         dog1.setName("Kitty1");
 
-        // 3. RegalTransaction.save()
-        RegalTransaction.save(realm1);
+        // 3. RoyalTransaction.save()
+        RoyalTransaction.save(realm1);
 
         // 4. Query
         RealmQuery<Dog> query = realm1.where(Dog.class);
@@ -209,9 +209,9 @@ public class RegalTransactionTest extends AndroidTestCase {
                 Dog dog1 = new Dog();
                 dog1.setName("Kitty1");
 
-                // 3. RegalTransaction.saveInBackground()
+                // 3. RoyalTransaction.saveInBackground()
                 try {
-                    RegalTransaction.saveInBackground(realm1, new OnRegalUpdatedListener() {
+                    RoyalTransaction.saveInBackground(realm1, new OnRoyalUpdatedListener() {
                         @Override
                         public void onUpdated() {
                             // 4. Query
@@ -227,8 +227,8 @@ public class RegalTransactionTest extends AndroidTestCase {
                             latch.countDown();
                         }
                     }, dog1);
-                    fail("Please call RegalTransaction.saveInBackground() method in main thread!! " +
-                            "If you are not in main thread, please use RegalTransaction.save() method :)");
+                    fail("Please call RoyalTransaction.saveInBackground() method in main thread!! " +
+                            "If you are not in main thread, please use RoyalTransaction.save() method :)");
                 } catch (IllegalStateException e) {
                     latch.countDown();
                 }
@@ -254,8 +254,8 @@ public class RegalTransactionTest extends AndroidTestCase {
                 Dog dog1 = new Dog();
                 dog1.setName("Kitty1");
 
-                // 3. RegalTransaction.saveInBackground()
-                RegalTransaction.saveInBackground(realm1, new OnRegalUpdatedListener() {
+                // 3. RoyalTransaction.saveInBackground()
+                RoyalTransaction.saveInBackground(realm1, new OnRoyalUpdatedListener() {
                     @Override
                     public void onUpdated() {
                         // 4. Query

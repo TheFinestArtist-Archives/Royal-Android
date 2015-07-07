@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package com.thefinestartist.regal.example.entities;
+
+package com.thefinestartist.royal.example.entities;
 
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Index;
 
-public class Cat extends RealmObject {
+public class Dog extends RealmObject {
+
+    @Index
     private String name;
     private long age;
     private float height;
@@ -28,7 +32,13 @@ public class Cat extends RealmObject {
     private boolean hasTail;
     private Date birthday;
     private Owner owner;
-    private DogPrimaryKey scaredOfDog;
+
+    public Dog() {
+    }
+
+    public Dog(String name) {
+        this.name = name;
+    }
 
     public Owner getOwner() {
         return owner;
@@ -53,7 +63,6 @@ public class Cat extends RealmObject {
     public void setHasTail(boolean hasTail) {
         this.hasTail = hasTail;
     }
-
 
     public double getWeight() {
         return weight;
@@ -85,13 +94,5 @@ public class Cat extends RealmObject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public DogPrimaryKey getScaredOfDog() {
-        return scaredOfDog;
-    }
-
-    public void setScaredOfDog(DogPrimaryKey scaredOfDog) {
-        this.scaredOfDog = scaredOfDog;
     }
 }

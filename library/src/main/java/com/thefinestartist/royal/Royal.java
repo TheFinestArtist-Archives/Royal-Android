@@ -1,4 +1,4 @@
-package com.thefinestartist.regal;
+package com.thefinestartist.royal;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,16 +8,16 @@ import com.orhanobut.logger.Logger;
 /**
  * Created by TheFinestArtist on 7/5/15.
  */
-public class Regal {
+public class Royal {
 
     static Context context;
 
     public static void initialize(@NonNull Context context) {
-        Regal.context = context.getApplicationContext();
-        Logger.init("Regal");
+        Royal.context = context.getApplicationContext();
+        Logger.init("Royal");
     }
 
     static Context getApplicationContext() {
-        return Regal.context;
+        return Royal.context;
     }
 }

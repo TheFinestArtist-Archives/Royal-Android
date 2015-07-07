@@ -15,16 +15,17 @@
  */
 
 
-package com.thefinestartist.regal.example.entities;
+package com.thefinestartist.royal.example.entities;
 
 import java.util.Date;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
 
-public class Dog extends RealmObject {
+public class DogPrimaryKey extends RealmObject {
 
-    @Index
+    @PrimaryKey
+    private long id;
     private String name;
     private long age;
     private float height;
@@ -33,11 +34,26 @@ public class Dog extends RealmObject {
     private Date birthday;
     private Owner owner;
 
-    public Dog() {
+    public DogPrimaryKey() {
+
     }
 
-    public Dog(String name) {
+    public DogPrimaryKey(long id, String name) {
+        this.id = id;
         this.name = name;
+    }
+
+    public DogPrimaryKey(String name) {
+        this.name = name;
+    }
+
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Owner getOwner() {

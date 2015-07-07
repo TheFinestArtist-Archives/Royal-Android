@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.thefinestartist.regal.example">
+    package="com.thefinestartist.royal.example">
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Regal"
+        android:label="Royal"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".MainActivity"
-            android:label="Regal">
+            android:name="com.thefinestartist.royal.example.MainActivity"
+            android:label="Royal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

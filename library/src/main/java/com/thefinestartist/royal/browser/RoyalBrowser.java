@@ -1,4 +1,4 @@
-package com.thefinestartist.regal.browser;
+package com.thefinestartist.royal.browser;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +8,7 @@ import android.widget.TableLayout;
 /**
  * Created by TheFinestArtist on 7/6/15.
  */
-public class RegalBrowser extends AppCompatActivity {
+public class RoyalBrowser extends AppCompatActivity {
 
     TableLayout tableLayout;
 

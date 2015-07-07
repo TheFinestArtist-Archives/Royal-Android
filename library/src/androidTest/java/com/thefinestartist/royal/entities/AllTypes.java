@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thefinestartist.regal.example.entities;
+package com.thefinestartist.royal.entities;
 
 import java.util.Date;
 

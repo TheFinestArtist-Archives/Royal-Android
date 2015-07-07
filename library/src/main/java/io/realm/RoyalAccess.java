@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 /**
  * Created by TheFinestArtist on 7/5/15.
  */
-public class RegalAccess {
+public class RoyalAccess {
 
 //    public static void deleteRealm(@NonNull RealmObject object) {
 //        object.realm = null;

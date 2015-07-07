@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thefinestartist.regal.entities;
+package com.thefinestartist.royal.entities;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

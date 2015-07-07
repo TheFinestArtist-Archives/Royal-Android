@@ -2,13 +2,13 @@ package io.realm;
 
 import android.test.AndroidTestCase;
 
-import com.thefinestartist.regal.entities.Dog;
-import com.thefinestartist.regal.entities.DogPrimaryKey;
+import com.thefinestartist.royal.entities.Dog;
+import com.thefinestartist.royal.entities.DogPrimaryKey;
 
 /**
  * Created by TheFinestArtist on 7/7/15.
  */
-public class RegalAccessTest extends AndroidTestCase {
+public class RoyalAccessTest extends AndroidTestCase {
 
     @Override
     protected void setUp() throws Exception {
@@ -46,10 +46,10 @@ public class RegalAccessTest extends AndroidTestCase {
         realm2.commitTransaction();
 
         // 3. Assert
-        assertNull(RegalAccess.getRealm(dog1));
-        assertNull(RegalAccess.getRealm(dog2));
-        assertEquals(realm1, RegalAccess.getRealm(dog3));
-        assertEquals(realm2, RegalAccess.getRealm(dog4));
+        assertNull(RoyalAccess.getRealm(dog1));
+        assertNull(RoyalAccess.getRealm(dog2));
+        assertEquals(realm1, RoyalAccess.getRealm(dog3));
+        assertEquals(realm2, RoyalAccess.getRealm(dog4));
 
         // 4. Realm Close
         realm1.close();
@@ -84,14 +84,14 @@ public class RegalAccessTest extends AndroidTestCase {
         realm2.commitTransaction();
 
         // 3. Assert
-        assertEquals(false, RegalAccess.hasPrimaryKey(realm1, dog1));
-        assertEquals(true, RegalAccess.hasPrimaryKey(realm1, dog2));
-        assertEquals(false, RegalAccess.hasPrimaryKey(realm1, dog3));
-        assertEquals(true, RegalAccess.hasPrimaryKey(realm1, dog4));
-        assertEquals(false, RegalAccess.hasPrimaryKey(realm2, dog1));
-        assertEquals(true, RegalAccess.hasPrimaryKey(realm2, dog2));
-        assertEquals(false, RegalAccess.hasPrimaryKey(realm2, dog3));
-        assertEquals(true, RegalAccess.hasPrimaryKey(realm2, dog4));
+        assertEquals(false, RoyalAccess.hasPrimaryKey(realm1, dog1));
+        assertEquals(true, RoyalAccess.hasPrimaryKey(realm1, dog2));
+        assertEquals(false, RoyalAccess.hasPrimaryKey(realm1, dog3));
+        assertEquals(true, RoyalAccess.hasPrimaryKey(realm1, dog4));
+        assertEquals(false, RoyalAccess.hasPrimaryKey(realm2, dog1));
+        assertEquals(true, RoyalAccess.hasPrimaryKey(realm2, dog2));
+        assertEquals(false, RoyalAccess.hasPrimaryKey(realm2, dog3));
+        assertEquals(true, RoyalAccess.hasPrimaryKey(realm2, dog4));
 
         // 4. Realm Close
         realm1.close();

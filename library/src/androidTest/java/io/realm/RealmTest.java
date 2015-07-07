@@ -6,7 +6,7 @@ import android.os.Message;
 import android.test.AndroidTestCase;
 
 import com.orhanobut.logger.Logger;
-import com.thefinestartist.regal.entities.Dog;
+import com.thefinestartist.royal.entities.Dog;
 
 /**
  * Created by TheFinestArtist on 7/7/15.

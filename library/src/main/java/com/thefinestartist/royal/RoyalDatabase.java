@@ -1,9 +1,9 @@
-package com.thefinestartist.regal;
+package com.thefinestartist.royal;
 
 /**
  * Created by TheFinestArtist on 7/5/15.
  */
-public abstract class RegalDatabase {
+public abstract class RoyalDatabase {
 
     public String getFileName() {
         return null;

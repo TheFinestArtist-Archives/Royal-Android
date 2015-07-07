@@ -1,11 +1,11 @@
-package com.thefinestartist.regal.example;
+package com.thefinestartist.royal.example;
 
 import android.content.Context;
 
 import com.orhanobut.logger.Logger;
-import com.thefinestartist.regal.RegalTransaction;
-import com.thefinestartist.regal.example.entities.Dog;
-import com.thefinestartist.regal.listener.OnRegalUpdatedListener;
+import com.thefinestartist.royal.RoyalTransaction;
+import com.thefinestartist.royal.example.entities.Dog;
+import com.thefinestartist.royal.listener.OnRoyalUpdatedListener;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -30,10 +30,10 @@ public class TestClass {
                 Dog dog1 = new Dog();
                 dog1.setName("Kitty1");
 
-                // 3. RegalTransaction.saveInBackground()
+                // 3. RoyalTransaction.saveInBackground()
                 final long threadId = Thread.currentThread().getId();
                 Logger.d("threadId : " + threadId);
-                RegalTransaction.saveInBackground(realm1, new OnRegalUpdatedListener() {
+                RoyalTransaction.saveInBackground(realm1, new OnRoyalUpdatedListener() {
                     @Override
                     public void onUpdated() {
                         Logger.d("threadId : " + Thread.currentThread().getId());

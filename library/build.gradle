@@ -32,8 +32,8 @@ dependencies {
 publish {
     userOrg = 'thefinestartist'
     groupId = 'com.thefinestartist'
-    artifactId = 'regal'
+    artifactId = 'royal'
     version = '0.81.1'
     description = 'Helper library for Realm-Java.'
-    website = 'https://github.com/TheFinestArtist/Regal-Android'
+    website = 'https://github.com/TheFinestArtist/Royal-Android'
 }

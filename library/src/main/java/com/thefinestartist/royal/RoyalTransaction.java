@@ -1,19 +1,19 @@
-package com.thefinestartist.regal;
+package com.thefinestartist.royal;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.thefinestartist.regal.listener.OnRegalUpdatedListener;
+import com.thefinestartist.royal.listener.OnRoyalUpdatedListener;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
-import io.realm.RegalAccess;
+import io.realm.RoyalAccess;
 
 /**
  * Created by TheFinestArtist on 7/5/15.
  */
-public class RegalTransaction {
+public class RoyalTransaction {
 
     public enum Transaction {CREATE, CREATE_OR_UPDATE}
 
@@ -34,7 +34,7 @@ public class RegalTransaction {
                 break;
             case CREATE_OR_UPDATE:
                 for (RealmObject object : objects) {
-                    if (RegalAccess.hasPrimaryKey(realm, object))
+                    if (RoyalAccess.hasPrimaryKey(realm, object))
                         realm.copyToRealmOrUpdate(object);
                     else
                         realm.copyToRealm(object);
@@ -44,10 +44,10 @@ public class RegalTransaction {
         realm.commitTransaction();
     }
 
-    public static void saveInBackground(@NonNull Realm realm, OnRegalUpdatedListener listener, RealmObject... objects) {
+    public static void saveInBackground(@NonNull Realm realm, OnRoyalUpdatedListener listener, RealmObject... objects) {
         if (Thread.currentThread().getId() != 1)
-            throw new IllegalStateException("Please call RegalTransaction.saveInBackground() method in main thread!! " +
-                    "If you are not in main thread, please use RegalTransaction.save() method :)");
+            throw new IllegalStateException("Please call RoyalTransaction.saveInBackground() method in main thread!! " +
+                    "If you are not in main thread, please use RoyalTransaction.save() method :)");
 
         new SaveTask(realm, listener).execute(objects);
     }
@@ -56,9 +56,9 @@ public class RegalTransaction {
 
         RealmConfiguration configuration;
         Realm realm;
-        OnRegalUpdatedListener listener;
+        OnRoyalUpdatedListener listener;
 
-        private SaveTask(Realm realm, OnRegalUpdatedListener listener) {
+        private SaveTask(Realm realm, OnRoyalUpdatedListener listener) {
             this.configuration = realm.getConfiguration();
             this.realm = Realm.getInstance(configuration);
             this.listener = listener;
@@ -81,7 +81,7 @@ public class RegalTransaction {
         }
     }
 
-//    public static void saveInBackground(Realm realm, OnRegalUpdatedListener listener, RealmObject... objects) {
+//    public static void saveInBackground(Realm realm, OnRoyalUpdatedListener listener, RealmObject... objects) {
 //        final RealmConfiguration configuration = realm.getConfiguration();
 //        // Increment referenceCount
 //        Realm.getInstance(configuration);
@@ -95,15 +95,15 @@ public class RegalTransaction {
 //
 //    static class StaticHandler extends Handler {
 //        //Using a weak reference means you won't prevent garbage collection
-//        private final WeakReference<OnRegalUpdatedListener> listenerWeakReference;
+//        private final WeakReference<OnRoyalUpdatedListener> listenerWeakReference;
 //
-//        public StaticHandler(OnRegalUpdatedListener listener) {
+//        public StaticHandler(OnRoyalUpdatedListener listener) {
 //            listenerWeakReference = new WeakReference<>(listener);
 //        }
 //
 //        @Override
 //        public void handleMessage(Message msg) {
-//            OnRegalUpdatedListener listener = listenerWeakReference.get();
+//            OnRoyalUpdatedListener listener = listenerWeakReference.get();
 //            if (listener != null) {
 //                listener.onUpdated();
 //            }
