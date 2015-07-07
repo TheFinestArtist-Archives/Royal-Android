@@ -12,39 +12,60 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 import io.realm.RoyalAccess;
+import io.realm.exceptions.RealmException;
 
 /**
  * Created by TheFinestArtist on 7/5/15.
  */
 public class RoyalTransaction {
 
-    public enum Type {CREATE, CREATE_OR_UPDATE}
+    enum Type {CREATE, CREATE_OR_UPDATE, DELETE}
 
     /**
      * @param realm
      * @param objects
      */
-    public static void save(@NonNull Realm realm, RealmObject... objects) {
-        save(Type.CREATE_OR_UPDATE, realm, objects);
+    public static void create(@NonNull Realm realm, RealmObject... objects) {
+        crud(Type.CREATE, realm, objects);
     }
 
-    public static void save(@NonNull Type type, @NonNull Realm realm, RealmObject... objects) {
+    public static void save(@NonNull Realm realm, RealmObject... objects) {
+        crud(Type.CREATE_OR_UPDATE, realm, objects);
+    }
+
+    public static void delete(@NonNull Realm realm, RealmObject... objects) {
+        crud(Type.DELETE, realm, objects);
+    }
+
+    static void crud(@NonNull Type type, @NonNull Realm realm, RealmObject... objects) {
         realm.beginTransaction();
-        switch (type) {
-            case CREATE:
-                for (RealmObject object : objects)
-                    realm.copyToRealm(object);
-                break;
-            case CREATE_OR_UPDATE:
-                for (RealmObject object : objects) {
-                    if (RoyalAccess.hasPrimaryKey(realm, object))
-                        realm.copyToRealmOrUpdate(object);
-                    else
+        try {
+            switch (type) {
+                case CREATE:
+                    for (RealmObject object : objects)
                         realm.copyToRealm(object);
-                }
-                break;
+                    break;
+                case CREATE_OR_UPDATE:
+                    for (RealmObject object : objects) {
+                        if (RoyalAccess.hasPrimaryKey(realm, object))
+                            realm.copyToRealmOrUpdate(object);
+                        else
+                            realm.copyToRealm(object);
+                    }
+                    break;
+                case DELETE:
+                    for (RealmObject object : objects)
+                        object.removeFromRealm();
+                    break;
+            }
+            realm.commitTransaction();
+        } catch (RuntimeException e) {
+            realm.cancelTransaction();
+            throw new RealmException("Exception during RoyalTransaction.save().", e);
+        } catch (Error e) {
+            realm.cancelTransaction();
+            throw e;
         }
-        realm.commitTransaction();
     }
 
     public static void saveInBackground(@NonNull Realm realm, OnRoyalListener listener, RealmObject... objects) {
@@ -53,7 +74,7 @@ public class RoyalTransaction {
                     "If you are not in main thread, please use RoyalTransaction.save() method :)");
 
         for (RealmObject object : objects) {
-            RoyalAccess.clearObject(object);
+//            RoyalAccess.clearObject(object);
 //            Realm objectRealm = RoyalAccess.getRealm(object);
 //            if (objectRealm != null) {
 //                objectRealm.beginTransaction();
