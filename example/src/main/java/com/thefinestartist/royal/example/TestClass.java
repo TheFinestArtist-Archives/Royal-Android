@@ -5,7 +5,7 @@ import android.content.Context;
 import com.orhanobut.logger.Logger;
 import com.thefinestartist.royal.RoyalTransaction;
 import com.thefinestartist.royal.example.entities.Dog;
-import com.thefinestartist.royal.listener.OnRoyalUpdatedListener;
+import com.thefinestartist.royal.listener.OnRoyalListener;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -33,7 +33,7 @@ public class TestClass {
                 // 3. RoyalTransaction.saveInBackground()
                 final long threadId = Thread.currentThread().getId();
                 Logger.d("threadId : " + threadId);
-                RoyalTransaction.saveInBackground(realm1, new OnRoyalUpdatedListener() {
+                RoyalTransaction.saveInBackground(realm1, new OnRoyalListener() {
                     @Override
                     public void onUpdated() {
                         Logger.d("threadId : " + Thread.currentThread().getId());

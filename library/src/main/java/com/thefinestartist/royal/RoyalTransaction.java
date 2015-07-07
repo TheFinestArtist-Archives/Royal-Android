@@ -3,7 +3,7 @@ package com.thefinestartist.royal;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.thefinestartist.royal.listener.OnRoyalUpdatedListener;
+import com.thefinestartist.royal.listener.OnRoyalListener;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,19 +18,19 @@ import io.realm.RoyalAccess;
  */
 public class RoyalTransaction {
 
-    public enum Transaction {CREATE, CREATE_OR_UPDATE}
+    public enum Type {CREATE, CREATE_OR_UPDATE}
 
     /**
      * @param realm
      * @param objects
      */
     public static void save(@NonNull Realm realm, RealmObject... objects) {
-        save(Transaction.CREATE_OR_UPDATE, realm, objects);
+        save(Type.CREATE_OR_UPDATE, realm, objects);
     }
 
-    public static void save(@NonNull Transaction transaction, @NonNull Realm realm, RealmObject... objects) {
+    public static void save(@NonNull Type type, @NonNull Realm realm, RealmObject... objects) {
         realm.beginTransaction();
-        switch (transaction) {
+        switch (type) {
             case CREATE:
                 for (RealmObject object : objects)
                     realm.copyToRealm(object);
@@ -47,7 +47,7 @@ public class RoyalTransaction {
         realm.commitTransaction();
     }
 
-    public static void saveInBackground(@NonNull Realm realm, OnRoyalUpdatedListener listener, RealmObject... objects) {
+    public static void saveInBackground(@NonNull Realm realm, OnRoyalListener listener, RealmObject... objects) {
         if (Thread.currentThread().getId() != 1)
             throw new IllegalStateException("Please call RoyalTransaction.saveInBackground() method in main thread!! " +
                     "If you are not in main thread, please use RoyalTransaction.save() method :)");
@@ -91,9 +91,9 @@ public class RoyalTransaction {
 
         RealmConfiguration configuration;
         Set<Realm> realms;
-        OnRoyalUpdatedListener listener;
+        OnRoyalListener listener;
 
-        private SaveTask(RealmConfiguration configuration, Set<Realm> realms, OnRoyalUpdatedListener listener) {
+        private SaveTask(RealmConfiguration configuration, Set<Realm> realms, OnRoyalListener listener) {
             this.configuration = configuration;
             this.realms = realms;
             this.listener = listener;

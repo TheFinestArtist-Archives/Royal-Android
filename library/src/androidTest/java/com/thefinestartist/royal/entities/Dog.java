@@ -95,4 +95,8 @@ public class Dog extends RealmObject {
     public void setName(String name) {
         this.name = name;
     }
+
+    public static String getStaticName(Dog dog) {
+        return dog.name;
+    }
 }

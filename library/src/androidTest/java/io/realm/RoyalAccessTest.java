@@ -2,8 +2,11 @@ package io.realm;
 
 import android.test.AndroidTestCase;
 
+import com.orhanobut.logger.Logger;
 import com.thefinestartist.royal.entities.Dog;
 import com.thefinestartist.royal.entities.DogPrimaryKey;
+
+import io.realm.internal.Util;
 
 /**
  * Created by TheFinestArtist on 7/7/15.

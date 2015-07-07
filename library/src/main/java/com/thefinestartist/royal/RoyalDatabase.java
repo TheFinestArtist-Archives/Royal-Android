@@ -3,7 +3,7 @@ package com.thefinestartist.royal;
 /**
  * Created by TheFinestArtist on 7/5/15.
  */
-public abstract class RoyalDatabase {
+public class RoyalDatabase {
 
     public String getFileName() {
         return null;

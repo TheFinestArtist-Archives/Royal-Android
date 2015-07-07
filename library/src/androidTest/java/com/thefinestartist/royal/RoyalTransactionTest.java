@@ -7,7 +7,7 @@ import android.test.AndroidTestCase;
 
 import com.thefinestartist.royal.entities.Dog;
 import com.thefinestartist.royal.entities.DogPrimaryKey;
-import com.thefinestartist.royal.listener.OnRoyalUpdatedListener;
+import com.thefinestartist.royal.listener.OnRoyalListener;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -355,7 +355,7 @@ public class RoyalTransactionTest extends AndroidTestCase {
                 dog1.setName("Kitty1");
 
                 // 3. RoyalTransaction.saveInBackground()
-                RoyalTransaction.saveInBackground(realm1, new OnRoyalUpdatedListener() {
+                RoyalTransaction.saveInBackground(realm1, new OnRoyalListener() {
                     @Override
                     public void onUpdated() {
                         // 4. Query
