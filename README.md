@@ -11,6 +11,19 @@ Realm is very fast database, but unfortunately there is some usability issues.
 
 ###RoyalTransaction
 
+**API**
+```java
+// RealmList, RealmResults
+RoyalTransaction.save(Realm, RealmObject...);
+RoyalTransaction.save(Transaction, Realm, RealmObject...);
+
+RoyalTransaction.saveInBackground(Realm, RealmObject...);
+RoyalTransaction.saveInBackground(Transaction, OnRoyalUpdatedListener, RealmObject...);
+
+RoyalTransaction.delete(Realm, RealmObject...);
+RoyalTransaction.deleteInBackground(Realm, OnRoyalUpdatedListener, RealmObject...);
+```
+
 ```java
 User user = new User();
 user.setName("Leonardo Taehwan Kim");
@@ -18,4 +31,18 @@ user.setEmail("contact@thefinestartist.com");
 user.setUsername("TheFinestArtist");
 
 RoyalTransaction.save(realm, user);
+```
+
+```java
+User user1 = new User();
+user1.setName("Leonardo Taehwan Kim");
+user1.setEmail("contact@thefinestartist.com");
+user1.setUsername("TheFinestArtist");
+
+User user2 = new User();
+user2.setName("Leonardo Taehwan Kim");
+user2.setEmail("contact@thefinestartist.com");
+user2.setUsername("TheFinestArtist");
+
+RoyalTransaction.save(realm, user1, user2);
 ```
