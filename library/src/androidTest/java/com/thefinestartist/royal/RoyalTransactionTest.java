@@ -247,68 +247,68 @@ public class RoyalTransactionTest extends AndroidTestCase {
         latch.await();
     }
 
-    public void testSave7() throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-
-                // 1. Realm Setup
-                RealmConfiguration realmConfig1 = new RealmConfiguration.Builder(getContext()).name("1testSave7.realm").build();
-                Realm.deleteRealm(realmConfig1);
-                final Realm realm1 = Realm.getInstance(realmConfig1);
-
-                final Handler handler = new Handler() {
-                    @Override
-                    public void handleMessage(Message msg) {
-
-                        // 3. RoyalTransaction.save()
-                        RoyalTransaction.save(realm1, (RealmObject[]) msg.obj);
-
-                        // 4. Query
-                        RealmQuery<Dog> query = realm1.where(Dog.class);
-                        RealmResults<Dog> dogs = query.findAll();
-
-                        // 5. Assert
-                        assertNotNull(dogs);
-                        assertEquals(2, dogs.size());
-                        assertEquals("Kitty1", dogs.get(0).getName());
-                        assertEquals("Kitty2", dogs.get(1).getName());
-
-                        // 6. Realm Close
-                        realm1.close();
-
-                        latch.countDown();
-                    }
-                };
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        // 2. Object Setup
-                        Dog dog1 = new Dog();
-                        dog1.setName("Kitty1");
-
-                        RealmConfiguration realmConfig2 = new RealmConfiguration.Builder(getContext()).name("2testSave7.realm").build();
-                        Realm.deleteRealm(realmConfig2);
-                        Realm realm2 = Realm.getInstance(realmConfig2);
-
-                        realm2.beginTransaction();
-                        Dog dog2 = realm2.createObject(Dog.class);
-                        dog2.setName("Kitty2");
-                        realm2.commitTransaction();
-
-                        handler.sendMessage(Message.obtain(handler, 0, new RealmObject[]{dog1, dog2}));
-                    }
-                }).start();
-
-                Looper.loop();
-            }
-        }).start();
-        latch.await();
-    }
+//    public void testSave7() throws InterruptedException {
+//        final CountDownLatch latch = new CountDownLatch(1);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Looper.prepare();
+//
+//                // 1. Realm Setup
+//                RealmConfiguration realmConfig1 = new RealmConfiguration.Builder(getContext()).name("1testSave7.realm").build();
+//                Realm.deleteRealm(realmConfig1);
+//                final Realm realm1 = Realm.getInstance(realmConfig1);
+//
+//                final Handler handler = new Handler() {
+//                    @Override
+//                    public void handleMessage(Message msg) {
+//
+//                        // 3. RoyalTransaction.save()
+//                        RoyalTransaction.save(realm1, (RealmObject[]) msg.obj);
+//
+//                        // 4. Query
+//                        RealmQuery<Dog> query = realm1.where(Dog.class);
+//                        RealmResults<Dog> dogs = query.findAll();
+//
+//                        // 5. Assert
+//                        assertNotNull(dogs);
+//                        assertEquals(2, dogs.size());
+//                        assertEquals("Kitty1", dogs.get(0).getName());
+//                        assertEquals("Kitty2", dogs.get(1).getName());
+//
+//                        // 6. Realm Close
+//                        realm1.close();
+//
+//                        latch.countDown();
+//                    }
+//                };
+//
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                        // 2. Object Setup
+//                        Dog dog1 = new Dog();
+//                        dog1.setName("Kitty1");
+//
+//                        RealmConfiguration realmConfig2 = new RealmConfiguration.Builder(getContext()).name("2testSave7.realm").build();
+//                        Realm.deleteRealm(realmConfig2);
+//                        Realm realm2 = Realm.getInstance(realmConfig2);
+//
+//                        realm2.beginTransaction();
+//                        Dog dog2 = realm2.createObject(Dog.class);
+//                        dog2.setName("Kitty2");
+//                        realm2.commitTransaction();
+//
+//                        handler.sendMessage(Message.obtain(handler, 0, new RealmObject[]{dog1, dog2}));
+//                    }
+//                }).start();
+//
+//                Looper.loop();
+//            }
+//        }).start();
+//        latch.await();
+//    }
 
     public void testSaveInBackground1() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
@@ -379,53 +379,53 @@ public class RoyalTransactionTest extends AndroidTestCase {
         latch.await();
     }
 
-    public void testSaveInBackground3() throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
-        new Handler(getContext().getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                // 1. Realm Setup
-                final RealmConfiguration realmConfig1 = new RealmConfiguration.Builder(getContext()).name("1testSaveInBackground3.realm").build();
-                Realm.deleteRealm(realmConfig1);
-                Realm realm1 = Realm.getInstance(realmConfig1);
-
-                RealmConfiguration realmConfig2 = new RealmConfiguration.Builder(getContext()).name("2testSaveInBackground3.realm").build();
-                Realm.deleteRealm(realmConfig2);
-                Realm realm2 = Realm.getInstance(realmConfig2);
-
-                // 2. Object Setup
-                Dog dog1 = new Dog();
-                dog1.setName("Kitty1");
-
-                realm2.beginTransaction();
-                Dog dog2 = realm2.createObject(Dog.class);
-                dog2.setName("Kitty2");
-                realm2.commitTransaction();
-
-                // 3. RoyalTransaction.saveInBackground()
-                RoyalTransaction.saveInBackground(realm1, new OnRoyalUpdatedListener() {
-                    @Override
-                    public void onUpdated() {
-                        // 4. Query
-                        Realm realm = Realm.getInstance(realmConfig1);
-                        RealmQuery<Dog> query = realm.where(Dog.class);
-                        RealmResults<Dog> dogs = query.findAll();
-
-                        // 5. Assert
-                        assertNotNull(dogs);
-                        assertEquals(2, dogs.size());
-                        assertEquals("Kitty1", dogs.get(0).getName());
-                        assertEquals("Kitty2", dogs.get(1).getName());
-                        assertEquals(1, Thread.currentThread().getId());
-                        latch.countDown();
-                    }
-                }, dog1, dog2);
-
-                // 6. Realm Close
-                realm1.close();
-                realm2.close();
-            }
-        });
-        latch.await();
-    }
+//    public void testSaveInBackground3() throws InterruptedException {
+//        final CountDownLatch latch = new CountDownLatch(1);
+//        new Handler(getContext().getMainLooper()).post(new Runnable() {
+//            @Override
+//            public void run() {
+//                // 1. Realm Setup
+//                final RealmConfiguration realmConfig1 = new RealmConfiguration.Builder(getContext()).name("1testSaveInBackground3.realm").build();
+//                Realm.deleteRealm(realmConfig1);
+//                Realm realm1 = Realm.getInstance(realmConfig1);
+//
+//                RealmConfiguration realmConfig2 = new RealmConfiguration.Builder(getContext()).name("2testSaveInBackground3.realm").build();
+//                Realm.deleteRealm(realmConfig2);
+//                Realm realm2 = Realm.getInstance(realmConfig2);
+//
+//                // 2. Object Setup
+//                Dog dog1 = new Dog();
+//                dog1.setName("Kitty1");
+//
+//                realm2.beginTransaction();
+//                Dog dog2 = realm2.createObject(Dog.class);
+//                dog2.setName("Kitty2");
+//                realm2.commitTransaction();
+//
+//                // 3. RoyalTransaction.saveInBackground()
+//                RoyalTransaction.saveInBackground(realm1, new OnRoyalUpdatedListener() {
+//                    @Override
+//                    public void onUpdated() {
+//                        // 4. Query
+//                        Realm realm = Realm.getInstance(realmConfig1);
+//                        RealmQuery<Dog> query = realm.where(Dog.class);
+//                        RealmResults<Dog> dogs = query.findAll();
+//
+//                        // 5. Assert
+//                        assertNotNull(dogs);
+//                        assertEquals(2, dogs.size());
+//                        assertEquals("Kitty1", dogs.get(0).getName());
+//                        assertEquals("Kitty2", dogs.get(1).getName());
+//                        assertEquals(1, Thread.currentThread().getId());
+//                        latch.countDown();
+//                    }
+//                }, dog1, dog2);
+//
+//                // 6. Realm Close
+//                realm1.close();
+//                realm2.close();
+//            }
+//        });
+//        latch.await();
+//    }
 }

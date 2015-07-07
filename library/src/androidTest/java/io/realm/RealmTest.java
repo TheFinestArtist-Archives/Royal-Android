@@ -99,4 +99,35 @@ public class RealmTest extends AndroidTestCase {
             }
         }).start();
     }
+
+    public void testCreateObject1() {
+        final RealmConfiguration realmConfig1 = new RealmConfiguration.Builder(getContext()).name("testCreateObject1.realm").build();
+        Realm.deleteRealm(realmConfig1);
+        Realm realm1 = Realm.getInstance(realmConfig1);
+
+        Dog dog1 = new Dog();
+        dog1.setName("Kitty1");
+        dog1.setAge(1);
+
+        realm1.beginTransaction();
+        realm1.copyToRealm(dog1);
+        Dog dog2 = realm1.createObject(Dog.class);
+        dog2.setName("Kitty2");
+        realm1.commitTransaction();
+
+        dog1.setAge(2); // Wow it works...I mean at least setting the value works..
+//        dog2.setAge(2); // Realm Access Error occurs
+
+        RealmQuery<Dog> query = realm1.where(Dog.class);
+        RealmResults<Dog> dogs = query.findAll();
+
+        assertNotNull(dogs);
+        assertEquals(2, dogs.size());
+        assertEquals("Kitty1", dogs.get(0).getName());
+        assertEquals(1, dogs.get(0).getAge());
+        assertEquals("Kitty2", dogs.get(1).getName());
+        assertEquals(0, dogs.get(1).getAge());
+
+        realm1.close();
+    }
 }
