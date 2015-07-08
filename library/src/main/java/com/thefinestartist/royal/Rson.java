@@ -117,14 +117,20 @@ public class Rson {
                     case LINK_LIST:
                         if (depth > 0) {
                             builder.append(prefix);
+                            builder.append("\"").append(table.getColumnName(i)).append("\":");
 
                             LinkView linkView = row.getLinkList(i);
                             Table linkTable = table.getLinkTarget(i);
 
+                            builder.append("[");
+                            String prefix2 = "";
                             for (int j = 0; j < linkView.size(); j++) {
+                                builder.append(prefix2);
                                 RealmObject linkedObject = RoyalAccess.get(realm, linkTable, linkView.getTargetRowIndex(j));
-                                builder.append("\"").append(table.getColumnName(i)).append("\":").append(Rson.toJsonString(linkedObject, depth - 1));
+                                builder.append(Rson.toJsonString(linkedObject, depth - 1));
+                                prefix2 = ",";
                             }
+                            builder.append("]");
 
                             prefix = ",";
                         }

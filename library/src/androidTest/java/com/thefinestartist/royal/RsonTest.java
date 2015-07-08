@@ -79,8 +79,53 @@ public class RsonTest extends AndroidTestCase {
         realm1.commitTransaction();
 
         // 3. Assert
-        Logger.d(Rson.toJsonString(allTypes1));
         Logger.d(Rson.toJsonString(allTypes2));
+
+//        {
+//            // 2693
+//            long timeMillis = System.currentTimeMillis();
+//            for (int i = 0; i < 2000; i++)
+//                Rson.toJsonString(allTypes1);
+//            Logger.d("Time#1: " + (System.currentTimeMillis() - timeMillis));
+//        }
+//
+//        {
+//            // 3572
+//            long timeMillis = System.currentTimeMillis();
+//            for (int i = 0; i < 2000; i++)
+//                Rson.toJsonString(allTypes2);
+//            Logger.d("Time#2: " + (System.currentTimeMillis() - timeMillis));
+//        }
+//
+//        {   // 880
+//            long timeMillis = System.currentTimeMillis();
+//            realm1.beginTransaction();
+//            for (int i = 0; i < 2000; i++) {
+//                AllTypes allTypes3 = realm1.createObject(AllTypes.class);
+//                allTypes3.setColumnBinary(new byte[]{0, 1, 2, 3, 4, 5, 6, 7});
+//                allTypes3.setColumnBoolean(true);
+//                allTypes3.setColumnDate(new Date());
+//                allTypes3.setColumnDouble(Double.MAX_VALUE);
+//                allTypes3.setColumnFloat(Float.MAX_VALUE);
+//                allTypes3.setColumnLong(Long.MAX_VALUE);
+//                allTypes3.setColumnString("allType3");
+//
+//                Dog dog7 = realm1.createObject(Dog.class);
+//                dog7.setName("Kitty7");
+//                dog7.setAge(4);
+//                allTypes3.setColumnRealmObject(dog7);
+//
+//                Dog dog8 = realm1.createObject(Dog.class);
+//                dog8.setName("Kitty8");
+//                dog8.setAge(5);
+//                Dog dog9 = realm1.createObject(Dog.class);
+//                dog9.setName("Kitty9");
+//                dog9.setAge(6);
+//                allTypes3.setColumnRealmList(new RealmList<>(dog8, dog9));
+//            }
+//            realm1.commitTransaction();
+//            Logger.d("Time#3: " + (System.currentTimeMillis() - timeMillis));
+//        }
 
         // 4. Realm Close
         realm1.close();
