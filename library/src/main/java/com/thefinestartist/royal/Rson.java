@@ -7,10 +7,14 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.Arrays;
+import java.util.Date;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RoyalAccess;
 import io.realm.internal.ColumnType;
+import io.realm.internal.LinkView;
 import io.realm.internal.Row;
 import io.realm.internal.Table;
 
@@ -65,97 +69,118 @@ public class Rson {
 
                 switch (columnType) {
                     case BOOLEAN:
-                        builder.append(prefix);
-                        builder.append("\"");
-                        builder.append(table.getColumnName(i));
-                        builder.append("\":");
-                        builder.append(row.getBoolean(i));
+                        builder
+                                .append(prefix)
+                                .append("\"")
+                                .append(table.getColumnName(i))
+                                .append("\":")
+                                .append(row.getBoolean(i));
                         prefix = ",";
                         break;
                     case INTEGER:
-                        builder.append(prefix);
-                        builder.append("\"");
-                        builder.append(table.getColumnName(i));
-                        builder.append("\":");
-                        builder.append(row.getLong(i));
+                        builder
+                                .append(prefix)
+                                .append("\"")
+                                .append(table.getColumnName(i))
+                                .append("\":")
+                                .append(row.getLong(i));
                         prefix = ",";
                         break;
                     case FLOAT:
-                        builder.append(prefix);
-                        builder.append("\"");
-                        builder.append(table.getColumnName(i));
-                        builder.append("\":");
-                        builder.append(row.getFloat(i));
+                        builder
+                                .append(prefix)
+                                .append("\"")
+                                .append(table.getColumnName(i))
+                                .append("\":")
+                                .append(row.getFloat(i));
                         prefix = ",";
                         break;
                     case DOUBLE:
-                        builder.append(prefix);
-                        builder.append("\"");
-                        builder.append(table.getColumnName(i));
-                        builder.append("\":");
-                        builder.append(row.getDouble(i));
+                        builder
+                                .append(prefix)
+                                .append("\"")
+                                .append(table.getColumnName(i))
+                                .append("\":")
+                                .append(row.getDouble(i));
                         prefix = ",";
                         break;
                     case STRING:
                         String string = row.getString(i);
                         if (string != null) {
-                            builder.append(prefix);
-                            builder.append("\"");
-                            builder.append(table.getColumnName(i));
-                            builder.append("\":\"");
-                            builder.append(string).append("\"");
+                            builder
+                                    .append(prefix)
+                                    .append("\"")
+                                    .append(table.getColumnName(i))
+                                    .append("\":\"")
+                                    .append(string).append("\"");
                             prefix = ",";
                         }
                         break;
                     case BINARY:
-//                        builder.append(prefix);
-//                        builder.append("\"").append(table.getColumnName(i)).append("\":").append(Arrays.toString(row.getBinaryByteArray(i)));
-//                        prefix = ",";
+                        builder
+                                .append(prefix)
+                                .append("\"")
+                                .append(table.getColumnName(i))
+                                .append("\":")
+                                .append(Arrays.toString(row.getBinaryByteArray(i)));
+                        prefix = ",";
                         break;
                     case DATE:
-//                        Date date = row.getDate(i);
-//                        if (date != null) {
-//                            // TODO: Date Formatting
-//                            builder.append(prefix);
-//                            builder.append("\"").append(table.getColumnName(i)).append("\":\"").append(date.toString()).append("\"");
-//                            prefix = ",";
-//                        }
+                        Date date = row.getDate(i);
+                        if (date != null) {
+                            // TODO: Date Formatting
+                            builder
+                                    .append(prefix)
+                                    .append("\"")
+                                    .append(table.getColumnName(i))
+                                    .append("\":\"")
+                                    .append(date.toString())
+                                    .append("\"");
+                            prefix = ",";
+                        }
                         break;
                     case TABLE:
                         break;
                     case MIXED:
                         break;
                     case LINK:
-//                        if (depth > 0) {
-//                            builder.append(prefix);
-//                            RealmObject linkedObject = RoyalAccess.get(realm, table.getLinkTarget(i), row.getLink(i));
-//                            if (linkedObject != null) {
-//                                builder.append("\"").append(table.getColumnName(i)).append("\":").append(Rson.toJsonString(linkedObject, depth - 1));
-//                                prefix = ",";
-//                            }
-//                        }
+                        if (depth > 0) {
+                            builder.append(prefix);
+                            RealmObject linkedObject = RoyalAccess.get(realm, table.getLinkTarget(i), row.getLink(i));
+                            if (linkedObject != null) {
+                                builder
+                                        .append("\"")
+                                        .append(table.getColumnName(i))
+                                        .append("\":")
+                                        .append(Rson.toJsonString(linkedObject, depth - 1));
+                                prefix = ",";
+                            }
+                        }
                         break;
                     case LINK_LIST:
-//                        if (depth > 0) {
-//                            // TODO: RealmList null checking
-//                            builder.append(prefix);
-//                            builder.append("\"").append(table.getColumnName(i)).append("\":");
-//
-//                            LinkView linkView = row.getLinkList(i);
-//                            Table linkTable = table.getLinkTarget(i);
-//
-//                            builder.append("[");
-//                            String prefix2 = "";
-//                            for (int j = 0; j < linkView.size(); j++) {
-//                                builder.append(prefix2);
-//                                RealmObject linkedObject = RoyalAccess.get(realm, linkTable, linkView.getTargetRowIndex(j));
-//                                builder.append(Rson.toJsonString(linkedObject, depth - 1));
-//                                prefix2 = ",";
-//                            }
-//                            builder.append("]");
-//
-//                            prefix = ",";
-//                        }
+                        if (depth > 0) {
+                            // TODO: RealmList null checking
+                            builder
+                                    .append(prefix)
+                                    .append("\"")
+                                    .append(table.getColumnName(i))
+                                    .append("\":");
+
+                            LinkView linkView = row.getLinkList(i);
+                            Table linkTable = table.getLinkTarget(i);
+
+                            builder.append("[");
+                            String prefix2 = "";
+                            for (int j = 0; j < linkView.size(); j++) {
+                                RealmObject linkedObject = RoyalAccess.get(realm, linkTable, linkView.getTargetRowIndex(j));
+                                builder
+                                        .append(prefix2)
+                                        .append(Rson.toJsonString(linkedObject, depth - 1));
+                                prefix2 = ",";
+                            }
+                            builder.append("]");
+                            prefix = ",";
+                        }
                         break;
                 }
             }

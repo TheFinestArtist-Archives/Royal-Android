@@ -296,5 +296,12 @@ public class RsonTest extends AndroidTestCase {
             }
             Logger.d("String Build Time#2: " + (System.currentTimeMillis() - timeMillis));
         }
+
+        // 2000 conversion
+        // long: 40ns
+        // float: 100ns
+        // double: 270ns
+        // boolean: same as string
+        // TODO: byte[], Date
     }
 }
