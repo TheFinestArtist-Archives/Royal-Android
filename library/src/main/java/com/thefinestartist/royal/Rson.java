@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -51,7 +52,10 @@ public class Rson {
         return toJsonString(object, 1);
     }
 
-    static String toJsonString(@NonNull RealmObject object, int depth) {
+    // TODO: Date Formatting
+    // TODO: Find some faster String builder library
+    // TODO: Lots of tests
+    public static String toJsonString(@NonNull RealmObject object, int depth) {
         if (!RoyalAccess.isProxy(object)) {
             return getGson().toJson(object);
         } else {
@@ -88,9 +92,12 @@ public class Rson {
                         prefix = ",";
                         break;
                     case STRING:
-                        builder.append(prefix);
-                        builder.append("\"").append(table.getColumnName(i)).append("\":\"").append(row.getString(i)).append("\"");
-                        prefix = ",";
+                        String string = row.getString(i);
+                        if (string != null) {
+                            builder.append(prefix);
+                            builder.append("\"").append(table.getColumnName(i)).append("\":\"").append(string).append("\"");
+                            prefix = ",";
+                        }
                         break;
                     case BINARY:
                         builder.append(prefix);
@@ -98,9 +105,12 @@ public class Rson {
                         prefix = ",";
                         break;
                     case DATE:
-                        builder.append(prefix);
-                        builder.append("\"").append(table.getColumnName(i)).append("\":\"").append(row.getDate(i).toString()).append("\"");
-                        prefix = ",";
+                        Date date = row.getDate(i);
+                        if (date != null) {
+                            builder.append(prefix);
+                            builder.append("\"").append(table.getColumnName(i)).append("\":\"").append(date.toString()).append("\"");
+                            prefix = ",";
+                        }
                         break;
                     case TABLE:
                         break;
@@ -110,8 +120,10 @@ public class Rson {
                         if (depth > 0) {
                             builder.append(prefix);
                             RealmObject linkedObject = RoyalAccess.get(realm, table.getLinkTarget(i), row.getLink(i));
-                            builder.append("\"").append(table.getColumnName(i)).append("\":").append(Rson.toJsonString(linkedObject, depth - 1));
-                            prefix = ",";
+                            if (linkedObject != null) {
+                                builder.append("\"").append(table.getColumnName(i)).append("\":").append(Rson.toJsonString(linkedObject, depth - 1));
+                                prefix = ",";
+                            }
                         }
                         break;
                     case LINK_LIST:
