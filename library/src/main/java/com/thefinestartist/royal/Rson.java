@@ -13,6 +13,7 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RoyalAccess;
 import io.realm.internal.ColumnType;
+import io.realm.internal.LinkView;
 import io.realm.internal.Row;
 import io.realm.internal.Table;
 
@@ -114,6 +115,19 @@ public class Rson {
                         }
                         break;
                     case LINK_LIST:
+                        if (depth > 0) {
+                            builder.append(prefix);
+
+                            LinkView linkView = row.getLinkList(i);
+                            Table linkTable = table.getLinkTarget(i);
+
+                            for (int j = 0; j < linkView.size(); j++) {
+                                RealmObject linkedObject = RoyalAccess.get(realm, linkTable, linkView.getTargetRowIndex(j));
+                                builder.append("\"").append(table.getColumnName(i)).append("\":").append(Rson.toJsonString(linkedObject, depth - 1));
+                            }
+
+                            prefix = ",";
+                        }
                         break;
                 }
             }

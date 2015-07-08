@@ -34,22 +34,13 @@ public class RoyalAccess {
         return realm.getTable(object.getClass()).hasPrimaryKey();
     }
 
-    public static Class getClass(@NonNull Realm realm, @NonNull Table table) {
+    public static Class<? extends RealmObject> getClass(@NonNull Realm realm, @NonNull Table table) {
         List<Class<? extends RealmObject>> classes = realm.getConfiguration().getSchemaMediator().getModelClasses();
         for (Class<? extends RealmObject> clazz: classes)
             if (realm.getTable(clazz).getName().equals(table.getName()))
                 return clazz;
 
         return null;
-    }
-
-    public static <E extends RealmObject> E get(@NonNull Realm realm, Class<E> clazz, long rowIndex) {
-        Table table = realm.getTable(clazz);
-        UncheckedRow row = table.getUncheckedRow(rowIndex);
-        E result = realm.getConfiguration().getSchemaMediator().newInstance(clazz);
-        result.row = row;
-        result.realm = realm;
-        return result;
     }
 
     public static RealmObject get(@NonNull Realm realm, @NonNull Table table, long rowIndex) {
