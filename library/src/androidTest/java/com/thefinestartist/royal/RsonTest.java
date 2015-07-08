@@ -76,9 +76,12 @@ public class RsonTest extends AndroidTestCase {
         dog6.setName("Kitty6");
         dog6.setAge(6);
         allTypes2.setColumnRealmList(new RealmList<>(dog5, dog6));
+//        allTypes2.setColumnRealmList(new RealmList<>(dog5));
+//        allTypes2.getColumnRealmList().get(0).setName("Kitty7");
         realm1.commitTransaction();
 
         // 3. Assert
+        Logger.json(Rson.toJsonString(allTypes1));
         Logger.json(Rson.toJsonString(allTypes2));
 
 //        {

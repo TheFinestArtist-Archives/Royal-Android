@@ -52,9 +52,7 @@ public class Rson {
         return toJsonString(object, 1);
     }
 
-    // TODO: Date Formatting
     // TODO: Find some faster String builder library
-    // TODO: Lots of tests
     public static String toJsonString(@NonNull RealmObject object, int depth) {
         if (!RoyalAccess.isProxy(object)) {
             return getGson().toJson(object);
@@ -107,6 +105,7 @@ public class Rson {
                     case DATE:
                         Date date = row.getDate(i);
                         if (date != null) {
+                            // TODO: Date Formatting
                             builder.append(prefix);
                             builder.append("\"").append(table.getColumnName(i)).append("\":\"").append(date.toString()).append("\"");
                             prefix = ",";
@@ -128,6 +127,7 @@ public class Rson {
                         break;
                     case LINK_LIST:
                         if (depth > 0) {
+                            // TODO: RealmList null checking
                             builder.append(prefix);
                             builder.append("\"").append(table.getColumnName(i)).append("\":");
 
