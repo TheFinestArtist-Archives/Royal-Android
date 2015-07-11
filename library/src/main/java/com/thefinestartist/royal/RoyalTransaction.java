@@ -70,8 +70,8 @@ public class RoyalTransaction {
 
 //    public static void saveInBackground(@NonNull Realm realm, OnRoyalListener listener, RealmObject... objects) {
 //        if (Thread.currentThread().getId() != 1)
-//            throw new IllegalStateException("Please call RoyalTransaction.saveInBackground() method in main thread!! " +
-//                    "If you are not in main thread, please use RoyalTransaction.save() method :)");
+//            throw new IllegalStateException("Please call RoyalTransaction.saveInBackground() method in main thread. " +
+//                    "If you are not in main thread, please use RoyalTransaction.save() method instead.");
 //
 //        for (RealmObject object : objects) {
 //            Realm objectRealm = RoyalAccess.getRealm(object);

@@ -130,6 +130,10 @@ public class Rson {
                         Date date = row.getDate(i);
                         if (date != null) {
                             // TODO: Date Formatting
+                            // TODO: Gson "Jul 12, 2015 3:50:05 AM"
+                            // Gson gson = new GsonBuilder().setDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").create();
+                            // Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+                            // TODO: Current "Sun Jul 12 03:50:05 GMT+09:00 2015"
                             builder
                                     .append(prefix)
                                     .append("\"")
@@ -161,6 +165,7 @@ public class Rson {
                     case LINK_LIST:
                         if (depth > 0) {
                             // TODO: RealmList null checking
+                            // TODO: getLinkList looks like it always return non null
                             builder
                                     .append(prefix)
                                     .append("\"")

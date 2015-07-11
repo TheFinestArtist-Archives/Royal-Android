@@ -10,14 +10,16 @@ import com.orhanobut.logger.Logger;
  */
 public class Royal {
 
-    static Context context;
+    private static Context context;
 
     public static void joinWith(@NonNull Context context) {
         Royal.context = context.getApplicationContext();
         Logger.init("Royal");
     }
 
-    static Context getApplicationContext() {
+    public static Context getApplicationContext() {
+        if (Royal.context == null)
+            throw new NullPointerException("Please call Royal.joinWith(context) within your Application onCreate() method.");
         return Royal.context;
     }
 }

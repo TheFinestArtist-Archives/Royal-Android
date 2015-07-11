@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 
 import com.thefinestartist.royal.util.ByteUtil;
 import com.thefinestartist.royal.util.FileUtil;
@@ -25,16 +24,16 @@ public class RoyalExport {
 
     // http://stackoverflow.com/a/29849902/1797648
     // http://stackoverflow.com/users/2945594/bokebe
-    public static void toEmail(@NonNull Context context, RealmConfiguration... configurations) {
-        toEmail(context, null, configurations);
+    public static void toEmail(RealmConfiguration... configurations) {
+        toEmail(null, configurations);
     }
 
-    public static void toEmail(@NonNull Context context, String email, RealmConfiguration... configurations) {
-        toEmail(context, email, null, configurations);
+    public static void toEmail(String email, RealmConfiguration... configurations) {
+        toEmail(email, null, configurations);
     }
 
     // Decrypt Automatically
-    public static void toEmail(@NonNull Context context, String email, Intent intent, RealmConfiguration... configurations) {
+    public static void toEmail(String email, Intent intent, RealmConfiguration... configurations) {
         if (configurations == null || configurations.length == 0)
             return;
 
@@ -42,26 +41,28 @@ public class RoyalExport {
         for (RealmConfiguration configuration : configurations)
             realms.add(Realm.getInstance(configuration));
 
-        toEmail(context, email, intent, realms.toArray(new Realm[realms.size()]));
+        toEmail(email, intent, realms.toArray(new Realm[realms.size()]));
 
         for (Realm realm : realms)
             realm.close();
     }
 
-    public static void toEmail(@NonNull Context context, Realm... realms) {
-        toEmail(context, null, realms);
+    public static void toEmail(Realm... realms) {
+        toEmail(null, realms);
     }
 
-    public static void toEmail(@NonNull Context context, String email, Realm... realms) {
-        toEmail(context, email, null, realms);
+    public static void toEmail(String email, Realm... realms) {
+        toEmail(email, null, realms);
     }
 
     // Decrypt Automatically
     // TODO: Add device information
     // TODO: HTML format
-    public static void toEmail(@NonNull Context context, String email, Intent intent, Realm... realms) {
+    public static void toEmail(String email, Intent intent, Realm... realms) {
         if (realms == null || realms.length == 0)
             return;
+
+        Context context = Royal.getApplicationContext();
 
         try {
             // Exporting .realm files into cache directory
@@ -137,22 +138,25 @@ public class RoyalExport {
                 intent.putExtra(Intent.EXTRA_TEXT, message.toString());
             }
 
-            context.startActivity(Intent.createChooser(intent, "Choose Email Application"));
+            Intent chooser = Intent.createChooser(intent, "Choose Email Application").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(chooser);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void toEmailAsRawFile(@NonNull Context context) {
-        toEmailAsRawFile(context, null);
+    public static void toEmailAsRawFile() {
+        toEmailAsRawFile(null);
     }
 
-    public static void toEmailAsRawFile(@NonNull Context context, String email) {
-        toEmailAsRawFile(context, email, null);
+    public static void toEmailAsRawFile(String email) {
+        toEmailAsRawFile(email, null);
     }
 
     // No Decryption
-    public static void toEmailAsRawFile(@NonNull Context context, String email, Intent intent) {
+    public static void toEmailAsRawFile(String email, Intent intent) {
+
+        Context context = Royal.getApplicationContext();
 
         List<File> files = FileUtil.getFilesFrom(context.getFilesDir(), ".realm");
 
@@ -213,7 +217,8 @@ public class RoyalExport {
             intent.putExtra(Intent.EXTRA_TEXT, message.toString());
         }
 
-        context.startActivity(Intent.createChooser(intent, "Choose Email Application"));
+        Intent chooser = Intent.createChooser(intent, "Choose Email Application").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(chooser);
     }
 
 //    final Intent shareIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
@@ -280,7 +285,10 @@ public class RoyalExport {
         }
     }
 
-    public static void toExternalStorageAsRawFile(@NonNull Context context) {
+    public static void toExternalStorageAsRawFile() {
+
+        Context context = Royal.getApplicationContext();
+
         List<File> files = FileUtil.getFilesFrom(context.getFilesDir(), ".realm");
 
         for (File file : files) {

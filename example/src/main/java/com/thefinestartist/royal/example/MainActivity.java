@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.thefinestartist.royal.Royal;
 import com.thefinestartist.royal.RoyalExport;
 
 import io.realm.Realm;
@@ -24,10 +25,12 @@ public class MainActivity extends AppCompatActivity {
                 .name("encrypted.realm")
                 .encryptionKey(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4})
                 .build());
+
+        Royal.joinWith(this);
     }
 
     public void sendEmail(View v) {
-        RoyalExport.toEmail(this, "contact@thefinestartist.com", realm, encryptedRealm);
+        RoyalExport.toEmail("contact@thefinestartist.com", realm, encryptedRealm);
 //        RoyalExport.toEmail(this, "contact@thefinestartist.com");
     }
 
