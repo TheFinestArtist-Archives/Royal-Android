@@ -68,26 +68,25 @@ public class RoyalTransaction {
         }
     }
 
-    public static void saveInBackground(@NonNull Realm realm, OnRoyalListener listener, RealmObject... objects) {
-        if (Thread.currentThread().getId() != 1)
-            throw new IllegalStateException("Please call RoyalTransaction.saveInBackground() method in main thread!! " +
-                    "If you are not in main thread, please use RoyalTransaction.save() method :)");
-
-        for (RealmObject object : objects) {
-//            RoyalAccess.clearObject(object);
+//    public static void saveInBackground(@NonNull Realm realm, OnRoyalListener listener, RealmObject... objects) {
+//        if (Thread.currentThread().getId() != 1)
+//            throw new IllegalStateException("Please call RoyalTransaction.saveInBackground() method in main thread!! " +
+//                    "If you are not in main thread, please use RoyalTransaction.save() method :)");
+//
+//        for (RealmObject object : objects) {
 //            Realm objectRealm = RoyalAccess.getRealm(object);
 //            if (objectRealm != null) {
 //                objectRealm.beginTransaction();
 //                object.removeFromRealm();
 //                objectRealm.commitTransaction();
 //            }
-        }
-
+//        }
+//
 //        Set<Realm> realms = getRealms(objects);
 //        new SaveTask(realm.getConfiguration(), realms, listener).execute(objects);
-
-        new SaveTask(realm.getConfiguration(), null, listener).execute(objects);
-    }
+//
+//        new SaveTask(realm.getConfiguration(), null, listener).execute(objects);
+//    }
 
     private static Set<Realm> getRealms(RealmObject[] objects) {
         Set<Realm> realms = new HashSet<>();

@@ -51,6 +51,7 @@ public class Rson {
         return toJsonString(object, 1);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static String toJsonString(@NonNull RealmObject object, int depth) {
         if (!RoyalAccess.isProxy(object)) {
             return getGson().toJson(object);

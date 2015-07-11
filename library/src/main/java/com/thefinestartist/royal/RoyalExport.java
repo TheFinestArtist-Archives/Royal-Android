@@ -124,9 +124,12 @@ public class RoyalExport {
                     message.append("\n");
 
                     message.append("Encryption Key: ");
-                    message.append(ByteUtil.byteArrayToLeInt(configuration.getEncryptionKey()));
-                    message.append(" ");
-                    message.append(Arrays.toString(configuration.getEncryptionKey()));
+                    byte[] key = configuration.getEncryptionKey();
+                    if (key != null) {
+                        message.append(ByteUtil.byteArrayToLeInt(key));
+                        message.append(" ");
+                    }
+                    message.append(Arrays.toString(key));
                     message.append("\n");
 
                     message.append("\n");
@@ -196,7 +199,7 @@ public class RoyalExport {
         if (intent.getStringExtra(Intent.EXTRA_TEXT) == null) {
             StringBuilder message = new StringBuilder();
 
-            for (File file: files) {
+            for (File file : files) {
                 message.append("Name: ");
                 message.append(file.getName());
                 message.append("\n");
