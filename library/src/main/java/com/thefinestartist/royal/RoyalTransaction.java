@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.thefinestartist.royal.listener.OnRoyalListener;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import io.realm.Realm;
@@ -21,49 +23,74 @@ public class RoyalTransaction {
 
     enum Type {CREATE, CREATE_OR_UPDATE, DELETE}
 
-    /**
-     * @param realm
-     * @param objects
-     */
-    public static void create(@NonNull Realm realm, RealmObject... objects) {
+    // TODO: Support List<? extends RealmObject>, RealmResults
+    // Support RealmObject, List, RealmList, RealmResults
+    public static void create(@NonNull Realm realm, Object... objects) {
         crud(Type.CREATE, realm, objects);
     }
 
-    public static void save(@NonNull Realm realm, RealmObject... objects) {
+    public static void save(@NonNull Realm realm, Object... objects) {
         crud(Type.CREATE_OR_UPDATE, realm, objects);
     }
 
-    public static void delete(@NonNull Realm realm, RealmObject... objects) {
+    public static void delete(@NonNull Realm realm, Object... objects) {
         crud(Type.DELETE, realm, objects);
     }
 
-    static void crud(@NonNull Type type, @NonNull Realm realm, RealmObject... objects) {
-        realm.beginTransaction();
+    static void crud(@NonNull Type type, @NonNull Realm realm, Object... objects) {
+
+        List<RealmObject> realmObjects = new ArrayList<>();
+        for (Object object : objects) {
+            if (object instanceof RealmObject) {
+                realmObjects.add((RealmObject) object);
+            } else if (object instanceof List) {
+                for (Object realmObject : (List) object) {
+                    if (realmObject instanceof RealmObject)
+                        realmObjects.add((RealmObject) realmObject);
+                    else if (realmObject != null)
+                        throw new IllegalArgumentException(realmObject.getClass().getName() + " is not allowed to save in Realm.");
+                }
+            } else if (object != null)
+                throw new IllegalArgumentException(object.getClass().getName() + " is not allowed to save in Realm.");
+        }
+
+        boolean transactionStarted = false;
+        try {
+            realm.beginTransaction();
+        } catch (IllegalStateException e) {
+            if (e.getMessage().contains("commitTransaction"))
+                transactionStarted = true;
+        }
+
         try {
             switch (type) {
                 case CREATE:
-                    for (RealmObject object : objects)
-                        realm.copyToRealm(object);
+                    for (RealmObject realmObject : realmObjects)
+                        realm.copyToRealm(realmObject);
                     break;
                 case CREATE_OR_UPDATE:
-                    for (RealmObject object : objects) {
-                        if (RoyalAccess.hasPrimaryKey(realm, object))
-                            realm.copyToRealmOrUpdate(object);
+                    for (RealmObject realmObject : realmObjects) {
+                        if (RoyalAccess.hasPrimaryKey(realm, realmObject))
+                            realm.copyToRealmOrUpdate(realmObject);
                         else
-                            realm.copyToRealm(object);
+                            realm.copyToRealm(realmObject);
                     }
                     break;
                 case DELETE:
-                    for (RealmObject object : objects)
-                        object.removeFromRealm();
+                    for (RealmObject realmObject : realmObjects)
+                        realmObject.removeFromRealm();
                     break;
             }
-            realm.commitTransaction();
+
+            if (!transactionStarted)
+                realm.commitTransaction();
         } catch (RuntimeException e) {
+//            if (!transactionStarted)
             realm.cancelTransaction();
             throw new RealmException("Exception during RoyalTransaction.save().", e);
         } catch (Error e) {
-            realm.cancelTransaction();
+            if (!transactionStarted)
+                realm.cancelTransaction();
             throw e;
         }
     }

@@ -8,6 +8,8 @@ import android.test.AndroidTestCase;
 import com.thefinestartist.royal.entities.Dog;
 import com.thefinestartist.royal.entities.DogPrimaryKey;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.realm.Realm;
@@ -308,6 +310,45 @@ public class RoyalTransactionTest extends AndroidTestCase {
 //        }).start();
 //        latch.await();
 //    }
+
+    public void testSave8() {
+        // 1. Realm Setup
+        RealmConfiguration realmConfig1 = new RealmConfiguration.Builder(getContext()).name("1testSave8.realm").build();
+        Realm.deleteRealm(realmConfig1);
+        Realm realm1 = Realm.getInstance(realmConfig1);
+
+        // 2. Object Setup
+        Dog dog1 = new Dog();
+        dog1.setName("Kitty1");
+
+        Dog dog2  = new Dog();
+        dog2.setAge(0);
+        dog2.setName("Kitty2");
+
+        List<Dog> dogList = new ArrayList<>();
+        dogList.add(dog2);
+        dogList.add(dog1);
+
+        // 3. RoyalTransaction.save()
+        realm1.beginTransaction();
+        RoyalTransaction.save(realm1, dog1, dogList);
+        realm1.commitTransaction();
+
+        // 4. Query
+        RealmQuery<Dog> query = realm1.where(Dog.class);
+        RealmResults<Dog> dogs = query.findAll();
+
+        // 5. Assert
+        assertNotNull(dogs);
+        assertEquals(3, dogs.size());
+        assertEquals("Kitty1", dogs.get(0).getName());
+        assertEquals(0, dogs.get(1).getAge());
+        assertEquals("Kitty2", dogs.get(1).getName());
+        assertEquals("Kitty1", dogs.get(2).getName());
+
+        // 6. Realm Close
+        realm1.close();
+    }
 
 //    public void testSaveInBackground1() throws InterruptedException {
 //        final CountDownLatch latch = new CountDownLatch(1);
