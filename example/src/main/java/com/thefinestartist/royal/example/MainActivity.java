@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveTo(View v) {
-        RoyalExport.toExternal(realm, encryptedRealm);
+        RoyalExport.toExternalStorage(realm, encryptedRealm);
     }
 
     @Override
