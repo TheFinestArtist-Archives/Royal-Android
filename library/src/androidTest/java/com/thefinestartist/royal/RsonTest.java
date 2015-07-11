@@ -82,7 +82,7 @@ public class RsonTest extends AndroidTestCase {
 
         // 3. Assert
         Logger.json(Rson.toJsonString(allTypes1));
-        Logger.d(Rson.toJsonString(allTypes2));
+        Logger.json(Rson.toJsonString(allTypes2));
 
 //        {
 //            // 2693

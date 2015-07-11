@@ -6,14 +6,14 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 
+import com.thefinestartist.royal.util.ByteUtil;
+import com.thefinestartist.royal.util.FileUtil;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -25,29 +25,44 @@ public class RoyalExport {
 
     // http://stackoverflow.com/a/29849902/1797648
     // http://stackoverflow.com/users/2945594/bokebe
-    public static void sendEmail(@NonNull Context context) {
-//        sendEmail(context, null, realms);
+    public static void toEmail(@NonNull Context context, RealmConfiguration... configurations) {
+        toEmail(context, null, configurations);
     }
 
-    public static void sendEmail(@NonNull Context context, String email) {
-//        sendEmail(context, email, null, realms);
+    public static void toEmail(@NonNull Context context, String email, RealmConfiguration... configurations) {
+        toEmail(context, email, null, configurations);
     }
 
-    public static void sendEmail(@NonNull Context context, String email, Intent intent) {
-//        sendEmail(context, email, intent, realms);
+    // Decrypt Automatically
+    public static void toEmail(@NonNull Context context, String email, Intent intent, RealmConfiguration... configurations) {
+        if (configurations == null || configurations.length == 0)
+            return;
+
+        List<Realm> realms = new ArrayList<>();
+        for (RealmConfiguration configuration : configurations)
+            realms.add(Realm.getInstance(configuration));
+
+        toEmail(context, email, intent, realms.toArray(new Realm[realms.size()]));
+
+        for (Realm realm : realms)
+            realm.close();
     }
 
-    public static void sendEmail(@NonNull Context context, @NonNull Realm... realms) {
-        sendEmail(context, null, realms);
+    public static void toEmail(@NonNull Context context, Realm... realms) {
+        toEmail(context, null, realms);
     }
 
-    public static void sendEmail(@NonNull Context context, String email, @NonNull Realm... realms) {
-        sendEmail(context, email, null, realms);
+    public static void toEmail(@NonNull Context context, String email, Realm... realms) {
+        toEmail(context, email, null, realms);
     }
 
-
+    // Decrypt Automatically
     // TODO: Add device information
-    public static void sendEmail(@NonNull Context context, String email, Intent intent, @NonNull Realm... realms) {
+    // TODO: HTML format
+    public static void toEmail(@NonNull Context context, String email, Intent intent, Realm... realms) {
+        if (realms == null || realms.length == 0)
+            return;
+
         try {
             // Exporting .realm files into cache directory
             ArrayList<Uri> uris = new ArrayList<>();
@@ -96,7 +111,7 @@ public class RoyalExport {
                 for (Realm realm : realms) {
                     RealmConfiguration configuration = realm.getConfiguration();
 
-                    message.append("giName: ");
+                    message.append("Name: ");
                     message.append(configuration.getRealmFileName());
                     message.append("\n");
 
@@ -109,6 +124,8 @@ public class RoyalExport {
                     message.append("\n");
 
                     message.append("Encryption Key: ");
+                    message.append(ByteUtil.byteArrayToLeInt(configuration.getEncryptionKey()));
+                    message.append(" ");
                     message.append(Arrays.toString(configuration.getEncryptionKey()));
                     message.append("\n");
 
@@ -123,7 +140,79 @@ public class RoyalExport {
         }
     }
 
-//    TODO: HTML format
+    public static void toEmailAsRawFile(@NonNull Context context) {
+        toEmailAsRawFile(context, null);
+    }
+
+    public static void toEmailAsRawFile(@NonNull Context context, String email) {
+        toEmailAsRawFile(context, email, null);
+    }
+
+    // No Decryption
+    public static void toEmailAsRawFile(@NonNull Context context, String email, Intent intent) {
+
+        List<File> files = FileUtil.getFilesFrom(context.getFilesDir(), ".realm");
+
+        // Exporting .realm files into cache directory
+        ArrayList<Uri> uris = new ArrayList<>();
+        for (File file : files) {
+            File realmFile = new File(context.getExternalCacheDir(), file.getName());
+            FileUtil.copy(file, realmFile);
+            uris.add(Uri.fromFile(realmFile));
+        }
+
+        // Intent Initialize
+        if (intent == null)
+            intent = new Intent();
+
+        // Setting Intent Action and Type
+        intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+
+        // Attaching files
+        ArrayList<Uri> attached = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+        if (attached != null)
+            uris.addAll(attached);
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+
+        if (intent.getType() == null)
+            intent.setType("message/rfc822");
+
+        // Set email
+        if (intent.getStringArrayExtra(Intent.EXTRA_EMAIL) == null)
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+
+        // Subject build
+        if (intent.getStringExtra(Intent.EXTRA_SUBJECT) == null) {
+            StringBuilder subject = new StringBuilder();
+            subject.append("[Royal] Exported ");
+            subject.append(uris.size());
+            subject.append(" realm file");
+            if (uris.size() > 1)
+                subject.append("s");
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject.toString());
+        }
+
+        // Message build
+        if (intent.getStringExtra(Intent.EXTRA_TEXT) == null) {
+            StringBuilder message = new StringBuilder();
+
+            for (File file: files) {
+                message.append("Name: ");
+                message.append(file.getName());
+                message.append("\n");
+
+                message.append("Path: ");
+                message.append(file.getPath());
+                message.append("\n");
+
+                message.append("\n");
+            }
+            intent.putExtra(Intent.EXTRA_TEXT, message.toString());
+        }
+
+        context.startActivity(Intent.createChooser(intent, "Choose Email Application"));
+    }
+
 //    final Intent shareIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
 //    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "The Subject");
 //    shareIntent.putExtra(
@@ -158,27 +247,42 @@ public class RoyalExport {
     // http://stackoverflow.com/a/30364742/1797648
     // http://stackoverflow.com/users/1574527/rooney
     // http://stackoverflow.com/users/1545363/nayoso
-    public static void moveTo(@NonNull Context context, @NonNull Realm realm, @NonNull String path) {
-        File f = new File(realm.getPath());
-        if (f.exists())
-            copy(f, new File(Environment.getExternalStorageDirectory() + "/default.realm"));
+    // mnt/sdcard/realms/default.realm
+    // Decrypt Automatically
+    public static void toExternalStorage(RealmConfiguration... configurations) {
+        if (configurations == null || configurations.length == 0)
+            return;
+
+        List<Realm> realms = new ArrayList<>();
+        for (RealmConfiguration configuration : configurations)
+            realms.add(Realm.getInstance(configuration));
+
+        toExternalStorage(realms.toArray(new Realm[realms.size()]));
+
+        for (Realm realm : realms)
+            realm.close();
     }
 
-    public static void copy(File src, File dst) {
-        try {
-            InputStream in = new FileInputStream(src);
-            OutputStream out = new FileOutputStream(dst);
+    public static void toExternalStorage(Realm... realms) {
+        if (realms == null || realms.length == 0)
+            return;
 
-            // Transfer bytes from in to out
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
+        for (Realm realm : realms) {
+            File file = new File(Environment.getExternalStorageDirectory() + "/realms/" + realm.getConfiguration().getRealmFileName());
+            try {
+                realm.writeCopyTo(file);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            in.close();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+    }
+
+    public static void toExternalStorageAsRawFile(@NonNull Context context) {
+        List<File> files = FileUtil.getFilesFrom(context.getFilesDir(), ".realm");
+
+        for (File file : files) {
+            File realmFile = new File(Environment.getExternalStorageDirectory() + "/realms/" + file.getName());
+            FileUtil.copy(file, realmFile);
         }
     }
 }
