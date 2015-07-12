@@ -5,6 +5,9 @@ import com.thefinestartist.royal.entities.Cat;
 import com.thefinestartist.royal.entities.Dog;
 import com.thefinestartist.royal.entities.Owner;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import io.realm.Realm;
 import io.realm.annotations.RealmModule;
 
@@ -33,8 +36,10 @@ public class SecondaryDatabase extends RoyalDatabase {
         return false;
     }
 
-    public Object getModules() {
-        return new SecondaryModule();
+    public Set<Object> getModules() {
+        Set<Object> set = new HashSet<>();
+        set.add(new SecondaryModule());
+        return set;
     }
 
     @Override

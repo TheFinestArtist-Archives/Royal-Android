@@ -85,8 +85,8 @@ public class RoyalTransaction {
             if (!transactionStarted)
                 realm.commitTransaction();
         } catch (RuntimeException e) {
-//            if (!transactionStarted)
-            realm.cancelTransaction();
+            if (!transactionStarted)
+                realm.cancelTransaction();
             throw new RealmException("Exception during RoyalTransaction.save().", e);
         } catch (Error e) {
             if (!transactionStarted)

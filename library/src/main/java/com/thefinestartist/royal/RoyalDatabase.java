@@ -1,5 +1,8 @@
 package com.thefinestartist.royal;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import io.realm.Realm;
 import io.realm.RealmMigration;
 
@@ -28,8 +31,11 @@ public abstract class RoyalDatabase implements RealmMigration {
         return false;
     }
 
-    public Object getModules() {
-        return Realm.getDefaultModule();
+    // TODO: change it like getModels
+    public Set<Object> getModules() {
+        Set<Object> set = new HashSet<>();
+        set.add(Realm.getDefaultModule());
+        return set;
     }
 
     @Override
