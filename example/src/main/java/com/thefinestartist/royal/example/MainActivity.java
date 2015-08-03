@@ -25,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
                 .name("encrypted.realm")
                 .encryptionKey(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4})
                 .build());
-
-        Royal.joinWith(this);
     }
 
     public void sendEmail(View v) {

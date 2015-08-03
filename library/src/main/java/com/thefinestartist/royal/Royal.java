@@ -35,8 +35,8 @@ public class Royal {
         Context context = Royal.getApplicationContext();
         RealmConfiguration.Builder builder = new RealmConfiguration.Builder(context);
         builder.name(royalDatabase.getFileName() + ".realm");
-//        if (forCache())
-//            builder.inMemory();
+        if (royalDatabase.forCache())
+            builder.inMemory();
         if (royalDatabase.getEncryptionKey() != null)
             builder.encryptionKey(royalDatabase.getEncryptionKey());
         if (royalDatabase.shouldDeleteIfMigrationNeeded())
