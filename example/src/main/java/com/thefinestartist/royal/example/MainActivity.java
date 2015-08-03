@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.thefinestartist.royal.Royal;
 import com.thefinestartist.royal.RoyalExport;
 
 import io.realm.Realm;

@@ -25,12 +25,36 @@ public class RoyalTransaction {
 
     // TODO: Support List<? extends RealmObject>, RealmResults
     // Support RealmObject, List, RealmList, RealmResults
+    public static void create(Class<? extends RoyalDatabase> clazz, Object... objects) {
+        create(Royal.getConfigurationOf(clazz), objects);
+    }
+
+    public static void create(@NonNull RealmConfiguration configuration, Object... objects) {
+        create(Realm.getInstance(configuration), objects);
+    }
+
     public static void create(@NonNull Realm realm, Object... objects) {
         crud(Type.CREATE, realm, objects);
     }
 
+    public static void save(Class<? extends RoyalDatabase> clazz, Object... objects) {
+        save(Royal.getConfigurationOf(clazz), objects);
+    }
+
+    public static void save(@NonNull RealmConfiguration configuration, Object... objects) {
+        save(Realm.getInstance(configuration), objects);
+    }
+
     public static void save(@NonNull Realm realm, Object... objects) {
         crud(Type.CREATE_OR_UPDATE, realm, objects);
+    }
+
+    public static void delete(Class<? extends RoyalDatabase> clazz, Object... objects) {
+        delete(Royal.getConfigurationOf(clazz), objects);
+    }
+
+    public static void delete(@NonNull RealmConfiguration configuration, Object... objects) {
+        delete(Realm.getInstance(configuration), objects);
     }
 
     public static void delete(@NonNull Realm realm, Object... objects) {

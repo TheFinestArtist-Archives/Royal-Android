@@ -86,17 +86,19 @@ RealmConfiguration configuration = Royal.getConfigurationOf(SecondaryDatabase.cl
 ```
 
 ###RoyalTransaction
-
 ```java
-// RealmList, RealmResults
-RoyalTransaction.save(Realm, RealmObject...);
-RoyalTransaction.save(Transaction, Realm, RealmObject...);
+// RealmList, RealmResults, RealmObject, List<? extends RealmObject>
+RoyalTransaction.create(Class<? extends RoyalDatabase> clazz, Object... objects);
+RoyalTransaction.create(RealmConfiguration configuration, Object... objects);
+RoyalTransaction.create(Realm realm, Object... objects);
 
-RoyalTransaction.saveInBackground(Realm, RealmObject...);
-RoyalTransaction.saveInBackground(Transaction, OnRoyalUpdatedListener, RealmObject...);
+RoyalTransaction.save(Class<? extends RoyalDatabase> clazz, Object... objects);
+RoyalTransaction.save(RealmConfiguration configuration, Object... objects);
+RoyalTransaction.save(Realm realm, Object... objects);
 
-RoyalTransaction.delete(Realm, RealmObject...);
-RoyalTransaction.deleteInBackground(Realm, OnRoyalUpdatedListener, RealmObject...);
+RoyalTransaction.delete(Class<? extends RoyalDatabase> clazz, Object... objects);
+RoyalTransaction.delete(RealmConfiguration configuration, Object... objects);
+RoyalTransaction.delete(Realm realm, Object... objects);
 ```
 
 ```java
@@ -120,4 +122,31 @@ user2.setEmail("contact@thefinestartist.com");
 user2.setUsername("TheFinestArtist");
 
 RoyalTransaction.save(realm, user1, user2);
+```
+
+###RoyalExport
+```java
+RoyalExport.toEmail(RealmConfiguration... configurations);
+RoyalExport.toEmail(String email, RealmConfiguration... configurations);
+RoyalExport.toEmail(String email, Intent intent, RealmConfiguration... configurations);
+
+RoyalExport.toEmail(Realm... realms);
+RoyalExport.toEmail(String email, Realm... realms);
+RoyalExport.toEmail(String email, Intent intent, Realm... realms);
+
+RoyalExport.toEmailAsRawFile();
+RoyalExport.toEmailAsRawFile(String email);
+RoyalExport.toEmailAsRawFile(String email, Intent intent);
+
+RoyalExport.toExternalStorage(RealmConfiguration... configurations);
+RoyalExport.toExternalStorage(Realm... realms);
+RoyalExport.toExternalStorageAsRawFile();
+```
+
+###Rson
+```java
+Gson gson = Rson.getGson();
+
+Rson.toJsonString(RealmObject object);
+Rson.toJsonString(RealmObject object, int depth);
 ```
