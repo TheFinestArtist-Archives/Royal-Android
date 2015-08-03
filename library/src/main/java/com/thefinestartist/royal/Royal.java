@@ -51,12 +51,17 @@ public class Royal {
         return map.get(clazz);
     }
 
-    public static Realm openRealm(Class<? extends RoyalDatabase> clazz) {
+    public static Realm getRealmOf(Class<? extends RoyalDatabase> clazz) {
         RealmConfiguration configuration = map.get(clazz);
         return Realm.getInstance(configuration);
     }
 
-    public static void closeRealm(Realm realm) {
-        realm.close();
-    }
+//    public static Realm openRealm(Class<? extends RoyalDatabase> clazz) {
+//        RealmConfiguration configuration = map.get(clazz);
+//        return Realm.getInstance(configuration);
+//    }
+//
+//    public static void closeRealm(Realm realm) {
+//        realm.close();
+//    }
 }

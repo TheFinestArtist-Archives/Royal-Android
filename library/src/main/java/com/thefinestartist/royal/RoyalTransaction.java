@@ -119,6 +119,7 @@ public class RoyalTransaction {
         }
     }
 
+    // TODO: Background Tread
 //    public static void saveInBackground(@NonNull Realm realm, OnRoyalListener listener, RealmObject... objects) {
 //        if (Thread.currentThread().getId() != 1)
 //            throw new IllegalStateException("Please call RoyalTransaction.saveInBackground() method in main thread. " +
