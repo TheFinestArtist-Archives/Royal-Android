@@ -36,7 +36,7 @@ public class RoyalAccess {
 
     public static Class<? extends RealmObject> getClass(@NonNull Realm realm, @NonNull Table table) {
         List<Class<? extends RealmObject>> classes = realm.getConfiguration().getSchemaMediator().getModelClasses();
-        for (Class<? extends RealmObject> clazz: classes)
+        for (Class<? extends RealmObject> clazz : classes)
             if (realm.getTable(clazz).getName().equals(table.getName()))
                 return clazz;
 
@@ -44,6 +44,9 @@ public class RoyalAccess {
     }
 
     public static RealmObject get(@NonNull Realm realm, @NonNull Table table, long rowIndex) {
+        if (rowIndex < 0)
+            return null;
+
         UncheckedRow row = table.getUncheckedRow(rowIndex);
         RealmObject result = realm.getConfiguration().getSchemaMediator().newInstance(getClass(realm, table));
         result.row = row;

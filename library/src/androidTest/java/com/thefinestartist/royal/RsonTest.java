@@ -11,6 +11,7 @@ import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
+import io.realm.RoyalAccess;
 
 /**
  * Created by TheFinestArtist on 7/8/15.
@@ -64,10 +65,10 @@ public class RsonTest extends AndroidTestCase {
         allTypes2.setColumnLong(Long.MAX_VALUE);
         allTypes2.setColumnString("allType2");
 
-        Dog dog4 = realm1.createObject(Dog.class);
-        dog4.setName("Kitty4");
-        dog4.setAge(4);
-        allTypes2.setColumnRealmObject(dog4);
+//        Dog dog4 = realm1.createObject(Dog.class);
+//        dog4.setName("Kitty4");
+//        dog4.setAge(4);
+//        allTypes2.setColumnRealmObject(dog4);
 
         Dog dog5 = realm1.createObject(Dog.class);
         dog5.setName("Kitty5");
@@ -81,6 +82,8 @@ public class RsonTest extends AndroidTestCase {
         realm1.commitTransaction();
 
         // 3. Assert
+        Logger.d("allTypes1: " + RoyalAccess.isProxy(allTypes1));
+        Logger.d("allTypes2: " + RoyalAccess.isProxy(allTypes2));
         Logger.json(Rson.toJsonString(allTypes1));
         Logger.json(Rson.toJsonString(allTypes2));
 

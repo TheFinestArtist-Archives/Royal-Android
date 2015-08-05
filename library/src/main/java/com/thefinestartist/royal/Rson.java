@@ -150,9 +150,9 @@ public class Rson {
                         break;
                     case LINK:
                         if (depth > 0) {
-                            builder.append(prefix);
                             RealmObject linkedObject = RoyalAccess.get(realm, table.getLinkTarget(i), row.getLink(i));
                             if (linkedObject != null) {
+                                builder.append(prefix);
                                 builder
                                         .append("\"")
                                         .append(table.getColumnName(i))
@@ -163,16 +163,14 @@ public class Rson {
                         }
                         break;
                     case LINK_LIST:
-                        if (depth > 0) {
-                            // TODO: RealmList null checking
-                            // TODO: getLinkList looks like it always return non null
+                        LinkView linkView = row.getLinkList(i);
+                        if (depth > 0 && linkView.size() > 0) {
                             builder
                                     .append(prefix)
                                     .append("\"")
                                     .append(table.getColumnName(i))
                                     .append("\":");
 
-                            LinkView linkView = row.getLinkList(i);
                             Table linkTable = table.getLinkTarget(i);
 
                             builder.append("[");
