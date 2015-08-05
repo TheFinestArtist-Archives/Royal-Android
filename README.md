@@ -12,8 +12,7 @@ Realm is very fast database, but unfortunately there is some usability issues.
 ###Dependencies
 ```java
 dependencies {
-   // your app's other dependencies
-   compile 'com.thefinestartist.royal:royal:0.82.0'
+   compile 'com.thefinestartist.royal:royal:0.82.0.0'
 }
 ```
 
@@ -153,7 +152,6 @@ Rson.toJsonString(RealmObject object, int depth);
 
 
 ## License
-
 ```
 The MIT License (MIT)
 

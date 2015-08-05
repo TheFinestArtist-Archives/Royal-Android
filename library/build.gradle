@@ -14,7 +14,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 22
         versionCode 1
-        versionName "0.81.1"
+        versionName "0.82.0.0"
     }
     lintOptions {
         abortOnError false
@@ -34,7 +34,7 @@ publish {
     userOrg = 'thefinestartist'
     groupId = 'com.thefinestartist'
     artifactId = 'royal'
-    version = '0.82.0'
+    version = '0.82.0.0'
     description = 'Helper library for Realm-Java.'
     website = 'https://github.com/TheFinestArtist/Royal-Android'
 }
