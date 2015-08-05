@@ -6,6 +6,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thefinestartist.royal.util.DateUtil;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -129,8 +130,6 @@ public class Rson {
                     case DATE:
                         Date date = row.getDate(i);
                         if (date != null) {
-                            // TODO: Date Formatting
-                            // TODO: Gson "Jul 12, 2015 3:50:05 AM"
                             // Gson gson = new GsonBuilder().setDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").create();
                             // Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
                             // TODO: Current "Sun Jul 12 03:50:05 GMT+09:00 2015"
@@ -139,7 +138,7 @@ public class Rson {
                                     .append("\"")
                                     .append(table.getColumnName(i))
                                     .append("\":\"")
-                                    .append(date.toString())
+                                    .append(DateUtil.getDateFormat(date))
                                     .append("\"");
                             prefix = ",";
                         }
