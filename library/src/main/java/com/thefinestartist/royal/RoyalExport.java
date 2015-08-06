@@ -24,6 +24,29 @@ public class RoyalExport {
 
     // http://stackoverflow.com/a/29849902/1797648
     // http://stackoverflow.com/users/2945594/bokebe
+    public static void toEmail(Class<? extends RoyalDatabase>... clazzes) {
+        toEmail(null, clazzes);
+    }
+
+    public static void toEmail(String email, Class<? extends RoyalDatabase>... clazzes) {
+        toEmail(email, null, clazzes);
+    }
+
+    // Decrypt Automatically
+    public static void toEmail(String email, Intent intent, Class<? extends RoyalDatabase>... clazzes) {
+        if (clazzes == null || clazzes.length == 0)
+            return;
+
+        List<Realm> realms = new ArrayList<>();
+        for (Class<? extends RoyalDatabase> clazz : clazzes)
+            realms.add(Realm.getInstance(Royal.getConfigurationOf(clazz)));
+
+        toEmail(email, intent, realms.toArray(new Realm[realms.size()]));
+
+        for (Realm realm : realms)
+            realm.close();
+    }
+
     public static void toEmail(RealmConfiguration... configurations) {
         toEmail(null, configurations);
     }
@@ -257,6 +280,14 @@ public class RoyalExport {
     // http://stackoverflow.com/users/1545363/nayoso
     // mnt/sdcard/realms/default.realm
     // Decrypt Automatically
+    public static void toExternalStorage(Class<? extends RoyalDatabase>... clazzes) {
+        List<RealmConfiguration> configurations = new ArrayList<>();
+        for (Class<? extends RoyalDatabase> clazz : clazzes)
+            configurations.add(Royal.getConfigurationOf(clazz));
+
+        toExternalStorage(configurations.toArray(new RealmConfiguration[configurations.size()]));
+    }
+
     public static void toExternalStorage(RealmConfiguration... configurations) {
         if (configurations == null || configurations.length == 0)
             return;
@@ -278,6 +309,8 @@ public class RoyalExport {
         for (Realm realm : realms) {
             File file = new File(Environment.getExternalStorageDirectory() + "/realms/" + realm.getConfiguration().getRealmFileName());
             try {
+                file.mkdirs();
+                file.delete();
                 realm.writeCopyTo(file);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -286,13 +319,13 @@ public class RoyalExport {
     }
 
     public static void toExternalStorageAsRawFile() {
-
         Context context = Royal.getApplicationContext();
-
         List<File> files = FileUtil.getFilesFrom(context.getFilesDir(), ".realm");
 
         for (File file : files) {
             File realmFile = new File(Environment.getExternalStorageDirectory() + "/realms/" + file.getName());
+            realmFile.mkdirs();
+            realmFile.delete();
             FileUtil.copy(file, realmFile);
         }
     }
