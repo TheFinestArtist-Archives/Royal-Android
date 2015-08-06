@@ -12,7 +12,7 @@ Realm is very fast database, but unfortunately there is some usability issues.
 ###Dependencies
 ```java
 dependencies {
-   compile 'com.thefinestartist:royal:0.82.0.3'
+   compile 'com.thefinestartist:royal:0.82.0.4'
 }
 ```
 
