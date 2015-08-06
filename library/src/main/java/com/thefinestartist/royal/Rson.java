@@ -130,7 +130,7 @@ public class Rson {
                     case DATE:
                         Date date = row.getDate(i);
                         // TODO: date.getTime() != 0 to better option
-                        if (date != null || date.getTime() != 0) {
+                        if (date != null && date.getTime() != 0) {
                             // Gson gson = new GsonBuilder().setDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz").create();
                             // Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
                             // TODO: Current "Sun Jul 12 03:50:05 GMT+09:00 2015"
