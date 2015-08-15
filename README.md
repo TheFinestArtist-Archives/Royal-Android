@@ -1,18 +1,11 @@
 #Royal Android
 **This project created to help developer to have better experience in using [Realm-Java](https://github.com/realm/realm-java)**
 
-Realm is very fast database, but unfortunately there is some usability issues.
-
-1. `Realm`, `RealmObject` can not be accessed by different thread other then which is was first created.
-2. You have to `realm.getInstance()` and `realm.close()` every time you use Realm.
-3. You have to call `realm.beginTransaction()` and `realm.commitTransaction()` every time you want to save data.
-4. You have to loop for-loop backward `for(int i = results.size() - 1; i >= 0; i--)` to update data inside it.
-5. Very hard to use Realm browser since Android device doesn't give you permission to pull the "name.realm" file unless you have rooted the phone.
 
 ###Dependencies
 ```java
 dependencies {
-   compile 'com.thefinestartist:royal:0.82.0.6'
+   compile 'com.thefinestartist:royal:0.82.1.0'
 }
 ```
 
@@ -125,6 +118,10 @@ RoyalTransaction.save(realm, user1, user2);
 
 ###RoyalExport
 ```java
+RoyalExport.toEmail(Class<? extends RoyalDatabase>... clazzes);
+RoyalExport.toEmail(String email, Class<? extends RoyalDatabase>... clazzes);
+RoyalExport.toEmail(String email, Intent intent, Class<? extends RoyalDatabase>... clazzes);
+
 RoyalExport.toEmail(RealmConfiguration... configurations);
 RoyalExport.toEmail(String email, RealmConfiguration... configurations);
 RoyalExport.toEmail(String email, Intent intent, RealmConfiguration... configurations);
@@ -137,6 +134,7 @@ RoyalExport.toEmailAsRawFile();
 RoyalExport.toEmailAsRawFile(String email);
 RoyalExport.toEmailAsRawFile(String email, Intent intent);
 
+RoyalExport.toExternalStorage(Class<? extends RoyalDatabase>... clazzes)
 RoyalExport.toExternalStorage(RealmConfiguration... configurations);
 RoyalExport.toExternalStorage(Realm... realms);
 RoyalExport.toExternalStorageAsRawFile();
