@@ -1,6 +1,6 @@
 package com.thefinestartist.royal;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -33,7 +33,9 @@ public abstract class RoyalDatabase implements RealmMigration {
 
     // TODO: change it like getModels
     public List<Object> getModules() {
-        return Collections.singletonList(Realm.getDefaultModule());
+        List<Object> modules = new ArrayList<>();
+        modules.add(Realm.getDefaultModule());
+        return modules;
     }
 
     @Override
