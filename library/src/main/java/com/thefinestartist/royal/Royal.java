@@ -30,7 +30,8 @@ public class Royal {
         return Royal.context;
     }
 
-    public static Map<Class<? extends RoyalDatabase>, RealmConfiguration> map = new ConcurrentHashMap<>();
+    public static Map<Class<? extends RoyalDatabase>, RealmConfiguration> configurationMap = new ConcurrentHashMap<>();
+    public static Map<Class<? extends RoyalDatabase>, RoyalDatabase> databaseMap = new ConcurrentHashMap<>();
 
     public static void addDatabase(@NonNull RoyalDatabase royalDatabase) {
         Context context = Royal.getApplicationContext();
@@ -54,20 +55,25 @@ public class Royal {
 
         builder.migration(royalDatabase);
         RealmConfiguration configuration = builder.build();
-        map.put(royalDatabase.getClass(), configuration);
+        configurationMap.put(royalDatabase.getClass(), configuration);
+        databaseMap.put(royalDatabase.getClass(), royalDatabase);
     }
 
     public static RealmConfiguration getConfigurationOf(Class<? extends RoyalDatabase> clazz) {
-        return map.get(clazz);
+        return configurationMap.get(clazz);
     }
 
     public static Realm getRealmOf(Class<? extends RoyalDatabase> clazz) {
-        RealmConfiguration configuration = map.get(clazz);
+        RealmConfiguration configuration = configurationMap.get(clazz);
         return Realm.getInstance(configuration);
     }
 
+    public static RoyalDatabase getDatabaseOf(Class<? extends RoyalDatabase> clazz) {
+        return databaseMap.get(clazz);
+    }
+
 //    public static Realm openRealm(Class<? extends RoyalDatabase> clazz) {
-//        RealmConfiguration configuration = map.get(clazz);
+//        RealmConfiguration configuration = configurationMap.get(clazz);
 //        return Realm.getInstance(configuration);
 //    }
 //

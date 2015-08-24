@@ -18,58 +18,49 @@ public class App extends Application {
    public void onCreate() {
       super.onCreate();
       Royal.joinWith(this);
+      Royal.addDatabase(new DefaultDatabase());
    }
 }
 ```
 
 ###Royal Database
 ```java
-public class SecondaryDatabase extends RoyalDatabase {
+public class DefaultDatabase extends RoyalDatabase {
 
-   public String getFileName() {
-      return "secondary";
-   }
+    @Override
+    public String getFileName() {
+        return super.getFileName();
+    }
 
-   public boolean forCache() {
-      return false;
-   }
+    @Override
+    public boolean forCache() {
+        return super.forCache();
+    }
 
-   public byte[] getEncryptionKey() {
-      return null;
-   }
+    @Override
+    public byte[] getEncryptionKey() {
+        return super.getEncryptionKey();
+    }
 
-   public int getVersion() {
-      return 0;
-   }
+    @Override
+    public boolean shouldDeleteIfMigrationNeeded() {
+        return super.shouldDeleteIfMigrationNeeded();
+    }
 
-   public boolean shouldDeleteIfMigrationNeeded() {
-      return false;
-   }
+    @Override
+    public List<Object> getModules() {
+        return super.getModules();
+    }
 
-   public Set<Object> getModules() {
-      Set<Object> set = new HashSet<>();
-      set.add(new SecondaryModule());
-      return set;
-   }
+    @Override
+    public int getVersion() {
+        return super.getVersion();
+    }
 
-   @Override
-   public long execute(Realm realm, long version) {
-      return getVersion();
-   }
-
-   @RealmModule(classes = {Dog.class, Cat.class, Owner.class})
-   public static class SecondaryModule {
-   }
-}
-
-public class App extends Application {
-
-   @Override
-   public void onCreate() {
-      super.onCreate();
-      Royal.joinWith(this);
-      Royal.addDatabase(new SecondaryDatabase());
-   }
+    @Override
+    public long execute(Realm realm, long version) {
+        return super.execute(realm, version);
+    }
 }
 ```
 
@@ -148,6 +139,8 @@ Rson.toJsonString(RealmObject object);
 Rson.toJsonString(RealmObject object, int depth);
 ```
 
+###RealmBaseAdapter
+for RecyclerView
 
 ## License
 ```
